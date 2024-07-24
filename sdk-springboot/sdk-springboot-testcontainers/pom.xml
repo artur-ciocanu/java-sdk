@@ -58,7 +58,7 @@
     <dependency>
       <groupId>io.dapr</groupId>
       <artifactId>dapr-sdk-workflows</artifactId>
-      <version>${project.parent.version}</version>
+      <version>${dapr.sdk-workflows.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
