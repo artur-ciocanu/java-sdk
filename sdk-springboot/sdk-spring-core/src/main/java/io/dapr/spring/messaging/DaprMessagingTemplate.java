@@ -15,7 +15,6 @@ package io.dapr.spring.messaging;
 
 import io.dapr.client.DaprClient;
 import io.dapr.client.domain.Metadata;
-import org.springframework.lang.Nullable;
 import reactor.core.publisher.Mono;
 
 import java.util.Collections;
@@ -33,20 +32,20 @@ public class DaprMessagingTemplate<T> implements DaprMessagingOperations<T> {
   }
 
   @Override
-  public Void send(@Nullable String topic, @Nullable T message) {
+  public Void send(String topic, T message) {
     return doSend(topic, message);
   }
 
   @Override
-  public SendMessageBuilder<T> newMessage(@Nullable T message) {
+  public SendMessageBuilder<T> newMessage(T message) {
     return new SendMessageBuilderImpl<>(this, message);
   }
 
-  private Void doSend(@Nullable String topic, @Nullable T message) {
+  private Void doSend(String topic, T message) {
     return doSendAsync(topic, message).block();
   }
 
-  private Mono<Void> doSendAsync(@Nullable String topic, @Nullable T message) {
+  private Mono<Void> doSendAsync(String topic, T message) {
     return daprClient.publishEvent(pubsubName,
         topic,
         message,
@@ -57,13 +56,11 @@ public class DaprMessagingTemplate<T> implements DaprMessagingOperations<T> {
 
     private final DaprMessagingTemplate<T> template;
 
-    @Nullable
     private final T message;
 
-    @Nullable
     private String topic;
 
-    SendMessageBuilderImpl(DaprMessagingTemplate<T> template, @Nullable T message) {
+    SendMessageBuilderImpl(DaprMessagingTemplate<T> template, T message) {
       this.template = template;
       this.message = message;
     }
