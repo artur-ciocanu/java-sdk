@@ -15,7 +15,7 @@ package io.dapr.spring.data;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dapr.client.DaprClient;
-import io.dapr.spring.data.repository.query.DaprPredicateQueryCreator;
+import io.dapr.spring.data.repository.query.DaprPredicate;
 import io.dapr.utils.TypeRef;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 import org.springframework.expression.spel.SpelNode;
@@ -139,11 +139,12 @@ public class PostgreSQLDaprKeyValueAdapter extends AbstractDaprKeyValueAdapter {
 
   private String createSql(String sqlPattern, String keyspace, KeyValueQuery<?> query) {
     String keyspaceFilter = getKeyspaceFilter(keyspace);
-    if (query.getCriteria() instanceof DaprPredicateQueryCreator.ValueComparingPredicate) {
-      String path = ((DaprPredicateQueryCreator.ValueComparingPredicate) query.getCriteria()).getPath().toString();
+
+    if (query.getCriteria() instanceof DaprPredicate criteria) {
+      String path = criteria.getPath().toString();
       String pathWithOutType = String.format("'%s'", path.substring(path.indexOf(".") + 1));
-      String value = String.format("'%s'",
-          ((DaprPredicateQueryCreator.ValueComparingPredicate) query.getCriteria()).getValue().toString());
+      String value = String.format("'%s'", ((DaprPredicate) query.getCriteria()).getValue().toString());
+
       return String.format(sqlPattern, keyspaceFilter, pathWithOutType, value);
     } else if (query.getCriteria() instanceof String) {
       SpelExpression expression = PARSER.parseRaw(query.getCriteria().toString());
@@ -151,8 +152,10 @@ public class PostgreSQLDaprKeyValueAdapter extends AbstractDaprKeyValueAdapter {
       SpelNode rightNode = expression.getAST().getChild(1);
       String left = String.format("'%s'", leftNode.toStringAST());
       String right = rightNode.toStringAST();
+
       return String.format(sqlPattern, keyspaceFilter, left, right);
     }
+
     return null;
   }
 
