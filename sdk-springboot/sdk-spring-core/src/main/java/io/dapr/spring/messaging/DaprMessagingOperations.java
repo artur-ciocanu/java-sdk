@@ -23,9 +23,8 @@ public interface DaprMessagingOperations<T> {
    * @param topic   the topic to send the message to or {@code null} to send to the
    *                default topic
    * @param message the message to send
-   * @return the id assigned by the broker to the published message
    */
-  Void send(String topic, T message);
+  void send(String topic, T message);
 
   /**
    * Create a {@link SendMessageBuilder builder} for configuring and sending a message.
@@ -53,15 +52,13 @@ public interface DaprMessagingOperations<T> {
 
     /**
      * Send the message in a blocking manner using the configured specification.
-     *
-     * @return the id assigned by the broker to the published message
      */
-    Void send();
+    void send();
 
     /**
      * Uses the configured specification to send the message in a non-blocking manner.
      *
-     * @return a future that holds the id assigned by the broker to the published message
+     * @return a Mono that completes when the message has been sent
      */
     Mono<Void> sendAsync();
   }
