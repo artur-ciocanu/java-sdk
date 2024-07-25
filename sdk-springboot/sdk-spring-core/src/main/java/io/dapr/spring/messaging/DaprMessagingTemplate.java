@@ -32,8 +32,8 @@ public class DaprMessagingTemplate<T> implements DaprMessagingOperations<T> {
   }
 
   @Override
-  public Void send(String topic, T message) {
-    return doSend(topic, message);
+  public void send(String topic, T message) {
+    doSend(topic, message);
   }
 
   @Override
@@ -41,8 +41,8 @@ public class DaprMessagingTemplate<T> implements DaprMessagingOperations<T> {
     return new SendMessageBuilderImpl<>(this, message);
   }
 
-  private Void doSend(String topic, T message) {
-    return doSendAsync(topic, message).block();
+  private void doSend(String topic, T message) {
+    doSendAsync(topic, message).block();
   }
 
   private Mono<Void> doSendAsync(String topic, T message) {
@@ -73,8 +73,8 @@ public class DaprMessagingTemplate<T> implements DaprMessagingOperations<T> {
 
 
     @Override
-    public Void send() {
-      return this.template.doSend(this.topic, this.message);
+    public void send() {
+      this.template.doSend(this.topic, this.message);
     }
 
     @Override
