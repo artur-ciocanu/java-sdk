@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.dapr.spring</groupId>
     <artifactId>dapr-sdk-spring-parent</artifactId>
-    <version>1.12.0-SNAPSHOT</version>
+    <version>0.12.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>dapr-sdk-spring-core</artifactId>
