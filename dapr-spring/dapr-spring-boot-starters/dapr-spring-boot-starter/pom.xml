@@ -5,12 +5,12 @@
 
   <parent>
     <groupId>io.dapr.spring</groupId>
-    <artifactId>dapr-sdk-spring-parent</artifactId>
+    <artifactId>dapr-spring-parent</artifactId>
     <version>0.12.0-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
-  <artifactId>dapr-sdk-springboot-starter</artifactId>
+  <artifactId>dapr-spring-boot-starter</artifactId>
   <name>Dapr Client Spring Boot Starter</name>
   <description>Dapr Client Spring Boot Starter</description>
   <packaging>jar</packaging>
@@ -26,12 +26,12 @@
     </dependency>
     <dependency>
       <groupId>io.dapr.spring</groupId>
-      <artifactId>dapr-sdk-springboot-autoconfigure</artifactId>
+      <artifactId>dapr-spring-core</artifactId>
       <version>${project.parent.version}</version>
     </dependency>
     <dependency>
       <groupId>io.dapr.spring</groupId>
-      <artifactId>dapr-sdk-spring-core</artifactId>
+      <artifactId>dapr-spring-boot-autoconfigure</artifactId>
       <version>${project.parent.version}</version>
     </dependency>
   </dependencies>

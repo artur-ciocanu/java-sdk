@@ -5,27 +5,46 @@
 
   <parent>
     <groupId>io.dapr.spring</groupId>
-    <artifactId>dapr-sdk-spring-parent</artifactId>
+    <artifactId>dapr-spring-parent</artifactId>
     <version>0.12.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>dapr-sdk-springboot-testcontainers</artifactId>
-  <name>Dapr Spring Boot Testcontainers</name>
-  <description>Dapr Spring Boot Testcontainers</description>
+  <artifactId>dapr-spring-boot-autoconfigure</artifactId>
+  <name>Dapr Spring Boot Autoconfigure</name>
+  <description>Dapr Spring Boot Autoconfigure</description>
   <packaging>jar</packaging>
 
   <dependencies>
     <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-test</artifactId>
+      <groupId>io.dapr.spring</groupId>
+      <artifactId>dapr-spring-core</artifactId>
+      <version>${project.parent.version}</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-autoconfigure-processor</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.data</groupId>
+      <artifactId>spring-data-keyvalue</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>testcontainers</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
       <exclusions>
         <exclusion>
           <groupId>com.vaadin.external.google</groupId>
@@ -37,22 +56,8 @@
       <groupId>io.diagrid.dapr</groupId>
       <artifactId>testcontainers-dapr</artifactId>
       <version>${testcontainers-dapr.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-testcontainers</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.dapr</groupId>
-      <artifactId>dapr-sdk-workflows</artifactId>
-      <version>${dapr.sdk-workflows.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
+
 </project>
