@@ -16,8 +16,9 @@ package io.dapr.spring.data;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dapr.client.DaprClient;
 import io.dapr.client.DaprClientBuilder;
-import io.diagrid.dapr.DaprContainer;
-import io.diagrid.dapr.QuotedBoolean;
+import io.dapr.testcontainers.Component;
+import io.dapr.testcontainers.DaprContainer;
+import io.dapr.testcontainers.DaprLogLevel;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -47,9 +48,9 @@ public class MySQLDaprKeyValueTemplateIT extends AbstractBaseIT {
 
   private static final String STATE_STORE_DSN = "mysql:password@tcp(mysql:3306)/";
   private static final String BINDING_DSN = "mysql:password@tcp(mysql:3306)/dapr_db";
-  private static final Map<String, Object> STATE_STORE_PROPERTIES = createStateStoreProperties();
+  private static final Map<String, String> STATE_STORE_PROPERTIES = createStateStoreProperties();
 
-  private static final Map<String, Object> BINDING_PROPERTIES = Collections.singletonMap("url", BINDING_DSN);
+  private static final Map<String, String> BINDING_PROPERTIES = Collections.singletonMap("url", BINDING_DSN);
 
   @Container
   private static final MySQLContainer<?> MY_SQL_CONTAINER = new MySQLContainer<>("mysql:5.7.34")
@@ -64,11 +65,11 @@ public class MySQLDaprKeyValueTemplateIT extends AbstractBaseIT {
   private static final DaprContainer DAPR_CONTAINER = new DaprContainer("daprio/daprd:1.13.2")
       .withAppName("local-dapr-app")
       .withNetwork(DAPR_NETWORK)
-      .withComponent(new DaprContainer.Component(STATE_STORE_NAME, "state.mysql", "v1", STATE_STORE_PROPERTIES))
-      .withComponent(new DaprContainer.Component(BINDING_NAME, "bindings.mysql", "v1", BINDING_PROPERTIES))
-      .withComponent(new DaprContainer.Component(PUBSUB_NAME, "pubsub.in-memory", "v1", Collections.emptyMap()))
+      .withComponent(new Component(STATE_STORE_NAME, "state.mysql", "v1", STATE_STORE_PROPERTIES))
+      .withComponent(new Component(BINDING_NAME, "bindings.mysql", "v1", BINDING_PROPERTIES))
+      .withComponent(new Component(PUBSUB_NAME, "pubsub.in-memory", "v1", Collections.emptyMap()))
       .withAppPort(8080)
-      .withDaprLogLevel(DaprContainer.DaprLogLevel.debug)
+      .withDaprLogLevel(DaprLogLevel.DEBUG)
       .withAppChannelAddress("host.testcontainers.internal")
       .withLogConsumer(new Slf4jLogConsumer(LOGGER))
       .dependsOn(MY_SQL_CONTAINER);
@@ -90,12 +91,12 @@ public class MySQLDaprKeyValueTemplateIT extends AbstractBaseIT {
     System.setProperty("dapr.http.port", Integer.toString(DAPR_CONTAINER.getHttpPort()));
   }
 
-  private static Map<String, Object> createStateStoreProperties() {
-    Map<String, Object> result = new HashMap<>();
+  private static Map<String, String> createStateStoreProperties() {
+    Map<String, String> result = new HashMap<>();
 
     result.put("keyPrefix", "name");
     result.put("schemaName", "dapr_db");
-    result.put("actorStateStore", new QuotedBoolean("true"));
+    result.put("actorStateStore", "true");
     result.put("connectionString", STATE_STORE_DSN);
 
     return result;

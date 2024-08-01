@@ -13,10 +13,6 @@ limitations under the License.
 
 package io.dapr.testcontainers;
 
-import io.diagrid.dapr.DaprContainer;
-import io.diagrid.dapr.DaprContainer.Component;
-import io.diagrid.dapr.DaprContainer.DaprLogLevel;
-import io.diagrid.dapr.QuotedBoolean;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.Testcontainers;
@@ -31,10 +27,10 @@ public interface DaprModule {
       .withAppName("local-dapr-app")
       //Enable Workflows
       .withComponent(new Component("kvstore", "state.in-memory", "v1",
-          Collections.singletonMap("actorStateStore", new QuotedBoolean("true"))))
+          Collections.singletonMap("actorStateStore", "true")))
       .withComponent(new Component("pubsub", "pubsub.in-memory", "v1", Collections.emptyMap()))
       .withAppPort(8080)
-      .withDaprLogLevel(DaprLogLevel.debug)
+      .withDaprLogLevel(DaprLogLevel.DEBUG)
       .withAppChannelAddress("host.testcontainers.internal");
 
   /**
