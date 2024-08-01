@@ -11,10 +11,9 @@
 limitations under the License.
 */
 
-package io.dapr.spring.boot.autoconfigure.pubsub;
+package io.dapr.it.spring.boot.autoconfigure.pubsub;
 
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.annotation.Id;
 
-@SpringBootApplication
-public class TestApplication {
+public record TestType(@Id Integer id, String content) {
 }

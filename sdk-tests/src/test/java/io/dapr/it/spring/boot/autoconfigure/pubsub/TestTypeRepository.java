@@ -11,7 +11,7 @@
 limitations under the License.
 */
 
-package io.dapr.spring.boot.autoconfigure.pubsub;
+package io.dapr.it.spring.boot.autoconfigure.pubsub;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

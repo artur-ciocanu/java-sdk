@@ -11,16 +11,16 @@
 limitations under the License.
 */
 
-package io.dapr.spring.data.repository;
+package io.dapr.it.spring.data.repository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dapr.client.DaprClient;
 import io.dapr.client.DaprClientBuilder;
-import io.dapr.spring.data.AbstractPostgreSQLBaseIT;
+import io.dapr.it.spring.data.AbstractPostgreSQLBaseIT;
+import io.dapr.it.spring.data.TestType;
 import io.dapr.spring.data.DaprKeyValueAdapterResolver;
 import io.dapr.spring.data.DaprKeyValueTemplate;
 import io.dapr.spring.data.KeyValueAdapterResolver;
-import io.dapr.spring.data.TestType;
 import io.dapr.spring.data.repository.config.EnableDaprRepositories;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

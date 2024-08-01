@@ -11,11 +11,14 @@
 limitations under the License.
 */
 
-package io.dapr.spring.data;
+package io.dapr.it.spring.data;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dapr.client.DaprClient;
 import io.dapr.client.DaprClientBuilder;
+import io.dapr.spring.data.DaprKeyValueAdapterResolver;
+import io.dapr.spring.data.DaprKeyValueTemplate;
+import io.dapr.spring.data.KeyValueAdapterResolver;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
