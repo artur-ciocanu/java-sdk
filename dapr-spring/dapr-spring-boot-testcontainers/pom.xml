@@ -34,7 +34,7 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>io.diagrid.dapr</groupId>
+      <groupId>io.dapr</groupId>
       <artifactId>testcontainers-dapr</artifactId>
       <version>${testcontainers-dapr.version}</version>
     </dependency>
