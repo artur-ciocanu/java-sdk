@@ -13,7 +13,9 @@ limitations under the License.
 
 package io.dapr.spring.boot.autoconfigure;
 
-import io.dapr.DaprContainer;
+import io.dapr.testcontainers.Component;
+import io.dapr.testcontainers.DaprContainer;
+import io.dapr.testcontainers.DaprLogLevel;
 import org.junit.jupiter.api.BeforeAll;
 import org.testcontainers.containers.Network;
 import org.testcontainers.junit.jupiter.Container;
@@ -30,9 +32,9 @@ public abstract class BaseIntegrationTest {
   public static DaprContainer daprContainer = new DaprContainer("daprio/daprd:1.13.2")
       .withAppName("local-dapr-app")
       .withNetwork(daprNetwork)
-      .withComponent(new DaprContainer.Component("pubsub", "pubsub.in-memory", "v1", Collections.emptyMap()))
+      .withComponent(new Component("pubsub", "pubsub.in-memory", "v1", Collections.emptyMap()))
       .withAppPort(8080)
-      .withDaprLogLevel(DaprContainer.DaprLogLevel.debug)
+      .withDaprLogLevel(DaprLogLevel.DEBUG)
       .withAppChannelAddress("host.testcontainers.internal");
 
   @BeforeAll

@@ -13,8 +13,9 @@ limitations under the License.
 
 package io.dapr.spring.data;
 
-import io.diagrid.dapr.DaprContainer;
-import io.diagrid.dapr.QuotedBoolean;
+import io.dapr.testcontainers.Component;
+import io.dapr.testcontainers.DaprContainer;
+import io.dapr.testcontainers.DaprLogLevel;
 import org.junit.jupiter.api.BeforeAll;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -27,9 +28,9 @@ import java.util.Map;
 public abstract class AbstractPostgreSQLBaseIT extends AbstractBaseIT {
   private static final String CONNECTION_STRING =
       "host=postgres user=postgres password=password port=5432 connect_timeout=10 database=dapr_db";
-  private static final Map<String, Object> STATE_STORE_PROPERTIES = createStateStoreProperties();
+  private static final Map<String, String> STATE_STORE_PROPERTIES = createStateStoreProperties();
 
-  private static final Map<String, Object> BINDING_PROPERTIES = Collections.singletonMap("connectionString", CONNECTION_STRING);
+  private static final Map<String, String> BINDING_PROPERTIES = Collections.singletonMap("connectionString", CONNECTION_STRING);
 
   @Container
   private static final PostgreSQLContainer<?> POSTGRE_SQL_CONTAINER = new PostgreSQLContainer<>("postgres:16-alpine")
@@ -44,11 +45,11 @@ public abstract class AbstractPostgreSQLBaseIT extends AbstractBaseIT {
   private static final DaprContainer DAPR_CONTAINER = new DaprContainer("daprio/daprd:1.13.2")
       .withAppName("local-dapr-app")
       .withNetwork(DAPR_NETWORK)
-      .withComponent(new DaprContainer.Component(STATE_STORE_NAME, "state.postgresql", "v1", STATE_STORE_PROPERTIES))
-      .withComponent(new DaprContainer.Component(BINDING_NAME, "bindings.postgresql", "v1", BINDING_PROPERTIES))
-      .withComponent(new DaprContainer.Component(PUBSUB_NAME, "pubsub.in-memory", "v1", Collections.emptyMap()))
+      .withComponent(new Component(STATE_STORE_NAME, "state.postgresql", "v1", STATE_STORE_PROPERTIES))
+      .withComponent(new Component(BINDING_NAME, "bindings.postgresql", "v1", BINDING_PROPERTIES))
+      .withComponent(new Component(PUBSUB_NAME, "pubsub.in-memory", "v1", Collections.emptyMap()))
       .withAppPort(8080)
-      .withDaprLogLevel(DaprContainer.DaprLogLevel.debug)
+      .withDaprLogLevel(DaprLogLevel.DEBUG)
       .withAppChannelAddress("host.testcontainers.internal")
       .dependsOn(POSTGRE_SQL_CONTAINER);
 
@@ -59,11 +60,11 @@ public abstract class AbstractPostgreSQLBaseIT extends AbstractBaseIT {
     System.setProperty("dapr.http.port", Integer.toString(DAPR_CONTAINER.getHttpPort()));
   }
 
-  private static Map<String, Object> createStateStoreProperties() {
-    Map<String, Object> result = new HashMap<>();
+  private static Map<String, String> createStateStoreProperties() {
+    Map<String, String> result = new HashMap<>();
 
     result.put("keyPrefix", "name");
-    result.put("actorStateStore", new QuotedBoolean("true"));
+    result.put("actorStateStore", String.valueOf(true));
     result.put("connectionString", CONNECTION_STRING);
 
     return result;
