@@ -13,7 +13,7 @@ limitations under the License.
 
 package io.dapr.spring.boot.autoconfigure;
 
-import io.diagrid.dapr.DaprContainer;
+import io.dapr.DaprContainer;
 import org.junit.jupiter.api.BeforeAll;
 import org.testcontainers.containers.Network;
 import org.testcontainers.junit.jupiter.Container;

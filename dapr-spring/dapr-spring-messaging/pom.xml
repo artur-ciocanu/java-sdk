@@ -9,9 +9,9 @@
     <version>0.12.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>dapr-spring-core</artifactId>
-  <name>Dapr Spring Core</name>
-  <description>Dapr Spring Core</description>
+  <artifactId>dapr-spring-messaging</artifactId>
+  <name>Dapr Spring Messaging</name>
+  <description>Dapr Spring Messaging</description>
   <packaging>jar</packaging>
 
 </project>
