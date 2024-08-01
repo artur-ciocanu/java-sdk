@@ -11,15 +11,15 @@
 limitations under the License.
 */
 
-package io.dapr.spring.data;
+package io.dapr.it.spring.data.repository;
 
-import org.testcontainers.containers.Network;
-import org.testcontainers.junit.jupiter.Testcontainers;
+import io.dapr.it.spring.data.TestType;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-@Testcontainers
-public abstract class AbstractBaseIT {
-  public static final Network DAPR_NETWORK = Network.newNetwork();
-  public static final String STATE_STORE_NAME = "kvstore";
-  public static final String BINDING_NAME = "kvbinding";
-  public static final String PUBSUB_NAME = "pubsub";
+import java.util.List;
+
+@Repository
+public interface TestTypeRepository extends CrudRepository<TestType, Integer> {
+  List<TestType> findByContent(String content);
 }

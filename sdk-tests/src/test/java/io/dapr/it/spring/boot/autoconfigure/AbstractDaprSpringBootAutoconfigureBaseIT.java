@@ -11,7 +11,7 @@
 limitations under the License.
 */
 
-package io.dapr.spring.boot.autoconfigure;
+package io.dapr.it.spring.boot.autoconfigure;
 
 import io.dapr.testcontainers.Component;
 import io.dapr.testcontainers.DaprContainer;
@@ -24,7 +24,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.util.Collections;
 
 @Testcontainers
-public abstract class BaseIntegrationTest {
+public abstract class AbstractDaprSpringBootAutoconfigureBaseIT {
 
   public static Network daprNetwork = Network.newNetwork();
 

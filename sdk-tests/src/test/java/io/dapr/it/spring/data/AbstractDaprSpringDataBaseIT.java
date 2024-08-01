@@ -11,9 +11,15 @@
 limitations under the License.
 */
 
-package io.dapr.spring.boot.autoconfigure.pubsub;
+package io.dapr.it.spring.data;
 
-import org.springframework.data.annotation.Id;
+import org.testcontainers.containers.Network;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
-public record TestType(@Id Integer id, String content) {
+@Testcontainers
+public abstract class AbstractDaprSpringDataBaseIT {
+  public static final Network DAPR_NETWORK = Network.newNetwork();
+  public static final String STATE_STORE_NAME = "kvstore";
+  public static final String BINDING_NAME = "kvbinding";
+  public static final String PUBSUB_NAME = "pubsub";
 }

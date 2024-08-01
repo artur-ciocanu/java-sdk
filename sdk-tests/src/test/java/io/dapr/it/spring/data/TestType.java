@@ -11,7 +11,7 @@
 limitations under the License.
 */
 
-package io.dapr.spring.data;
+package io.dapr.it.spring.data;
 
 import org.springframework.data.annotation.Id;
 

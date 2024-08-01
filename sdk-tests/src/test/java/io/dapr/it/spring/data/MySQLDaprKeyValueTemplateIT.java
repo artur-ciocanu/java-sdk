@@ -11,11 +11,14 @@
 limitations under the License.
 */
 
-package io.dapr.spring.data;
+package io.dapr.it.spring.data;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dapr.client.DaprClient;
 import io.dapr.client.DaprClientBuilder;
+import io.dapr.spring.data.DaprKeyValueAdapterResolver;
+import io.dapr.spring.data.DaprKeyValueTemplate;
+import io.dapr.spring.data.KeyValueAdapterResolver;
 import io.dapr.testcontainers.Component;
 import io.dapr.testcontainers.DaprContainer;
 import io.dapr.testcontainers.DaprLogLevel;
@@ -43,7 +46,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * Integration tests for {@link MySQLDaprKeyValueTemplateIT}.
  */
 @SuppressWarnings("AbbreviationAsWordInName")
-public class MySQLDaprKeyValueTemplateIT extends AbstractBaseIT {
+public class MySQLDaprKeyValueTemplateIT extends AbstractDaprSpringDataBaseIT {
   private static final Logger LOGGER = LoggerFactory.getLogger(MySQLDaprKeyValueTemplateIT.class);
 
   private static final String STATE_STORE_DSN = "mysql:password@tcp(mysql:3306)/";

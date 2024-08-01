@@ -11,11 +11,12 @@
 limitations under the License.
 */
 
-package io.dapr.spring.boot.autoconfigure.pubsub;
+package io.dapr.it.spring.boot.autoconfigure.pubsub;
 
 import io.dapr.client.domain.CloudEvent;
-import io.dapr.spring.boot.autoconfigure.BaseIntegrationTest;
+import io.dapr.it.spring.boot.autoconfigure.AbstractDaprSpringBootAutoconfigureBaseIT;
 import io.dapr.spring.boot.autoconfigure.client.DaprClientAutoConfiguration;
+import io.dapr.spring.boot.autoconfigure.pubsub.DaprPubSubAutoConfiguration;
 import io.dapr.spring.messaging.DaprMessagingTemplate;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -36,11 +37,9 @@ import static org.assertj.core.api.Assertions.assertThat;
         DaprClientAutoConfiguration.class,
         DaprPubSubAutoConfiguration.class,
     },
-    properties = {
-        "dapr.pubsub.name=pubsub"
-    }
+    properties = {"dapr.pubsub.name=pubsub"}
 )
-public class DaprPubSubAutoConfigurationIT extends BaseIntegrationTest {
+public class DaprPubSubAutoConfigurationIT extends AbstractDaprSpringBootAutoconfigureBaseIT {
 
   private static final Logger logger = LoggerFactory.getLogger(DaprPubSubAutoConfigurationIT.class);
 

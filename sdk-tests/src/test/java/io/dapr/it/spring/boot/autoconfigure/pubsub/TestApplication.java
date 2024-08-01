@@ -11,15 +11,11 @@
 limitations under the License.
 */
 
-package io.dapr.spring.data.repository;
+package io.dapr.it.spring.boot.autoconfigure.pubsub;
 
-import io.dapr.spring.data.TestType;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import io.dapr.spring.boot.autoconfigure.statestore.DaprStateStoreAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.List;
-
-@Repository
-public interface TestTypeRepository extends CrudRepository<TestType, Integer> {
-  List<TestType> findByContent(String content);
+@SpringBootApplication(exclude = {DaprStateStoreAutoConfiguration.class})
+public class TestApplication {
 }

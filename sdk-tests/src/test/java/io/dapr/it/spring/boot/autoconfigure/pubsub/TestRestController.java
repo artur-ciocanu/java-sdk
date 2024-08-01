@@ -11,7 +11,7 @@
 limitations under the License.
 */
 
-package io.dapr.spring.boot.autoconfigure.pubsub;
+package io.dapr.it.spring.boot.autoconfigure.pubsub;
 
 import io.dapr.Topic;
 import io.dapr.client.domain.CloudEvent;

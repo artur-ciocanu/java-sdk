@@ -11,7 +11,7 @@
 limitations under the License.
 */
 
-package io.dapr.spring.data;
+package io.dapr.it.spring.data;
 
 import io.dapr.testcontainers.Component;
 import io.dapr.testcontainers.DaprContainer;
@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @SuppressWarnings("AbbreviationAsWordInName")
-public abstract class AbstractPostgreSQLBaseIT extends AbstractBaseIT {
+public abstract class AbstractPostgreSQLBaseIT extends AbstractDaprSpringDataBaseIT {
   private static final String CONNECTION_STRING =
       "host=postgres user=postgres password=password port=5432 connect_timeout=10 database=dapr_db";
   private static final Map<String, String> STATE_STORE_PROPERTIES = createStateStoreProperties();
