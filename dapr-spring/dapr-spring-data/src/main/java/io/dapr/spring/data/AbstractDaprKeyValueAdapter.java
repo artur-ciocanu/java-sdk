@@ -21,6 +21,7 @@ import io.dapr.utils.TypeRef;
 import org.springframework.data.keyvalue.core.KeyValueAdapter;
 import org.springframework.data.util.CloseableIterator;
 import org.springframework.util.Assert;
+import reactor.core.publisher.Mono;
 
 import java.util.Collections;
 import java.util.Map;
@@ -47,7 +48,7 @@ public abstract class AbstractDaprKeyValueAdapter implements KeyValueAdapter {
 
   @Override
   public void clear() {
-    throw new UnsupportedOperationException("'clear' method is not supported");
+    // Ignore
   }
 
   @Override
@@ -77,7 +78,7 @@ public abstract class AbstractDaprKeyValueAdapter implements KeyValueAdapter {
 
     String key = resolveKey(keyspace, id);
 
-    return daprClient.getState(stateStoreName, key, Object.class).block().getValue();
+    return resolveValue(daprClient.getState(stateStoreName, key, Object.class));
   }
 
   @Override
@@ -89,7 +90,7 @@ public abstract class AbstractDaprKeyValueAdapter implements KeyValueAdapter {
     String key = resolveKey(keyspace, id);
     GetStateRequest stateRequest = new GetStateRequest(stateStoreName, key).setMetadata(CONTENT_TYPE_META);
 
-    return daprClient.getState(stateRequest, TypeRef.get(type)).block().getValue();
+    return resolveValue(daprClient.getState(stateRequest, TypeRef.get(type)));
   }
 
   @Override
@@ -136,4 +137,11 @@ public abstract class AbstractDaprKeyValueAdapter implements KeyValueAdapter {
     return String.format("%s-%s", keyspace, id);
   }
 
+  private <T> T resolveValue(Mono<State<T>> state) {
+    if (state == null) {
+      return null;
+    }
+
+    return state.blockOptional().map(State::getValue).orElse(null);
+  }
 }

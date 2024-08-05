@@ -242,8 +242,15 @@ public class DaprKeyValueTemplate implements KeyValueOperations, ApplicationEven
   public <T> T delete(T objectToDelete) {
     Class<T> type = (Class<T>) ClassUtils.getUserClass(objectToDelete);
     KeyValuePersistentEntity<?, ?> entity = getKeyValuePersistentEntity(objectToDelete);
+    Object id = entity.getIdentifierAccessor(objectToDelete).getIdentifier();
 
-    return delete(entity.getIdentifierAccessor(objectToDelete).getIdentifier(), type);
+    if (id == null) {
+      String error = String.format("Cannot determine id for type %s", ClassUtils.getUserClass(objectToDelete));
+
+      throw new InvalidDataAccessApiUsageException(error);
+    }
+
+    return delete(id, type);
   }
 
   @Override
@@ -377,8 +384,8 @@ public class DaprKeyValueTemplate implements KeyValueOperations, ApplicationEven
   }
 
   private RuntimeException resolveExceptionIfPossible(RuntimeException e) {
-
     DataAccessException translatedException = exceptionTranslator.translateExceptionIfPossible(e);
+
     return translatedException != null ? translatedException : e;
   }
 

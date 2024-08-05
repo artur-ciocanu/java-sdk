@@ -53,6 +53,11 @@ public class DaprKeyValueAdapterResolver implements KeyValueAdapterResolver {
   @Override
   public KeyValueAdapter resolve() {
     DaprMetadata metadata = daprClient.getMetadata().block();
+
+    if (metadata == null) {
+      throw new IllegalStateException("No Dapr metadata found");
+    }
+
     List<ComponentMetadata> components = metadata.getComponents();
 
     if (components == null || components.isEmpty()) {
