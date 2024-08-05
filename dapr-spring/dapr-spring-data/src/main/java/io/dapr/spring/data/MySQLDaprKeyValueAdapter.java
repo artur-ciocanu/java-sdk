@@ -103,7 +103,13 @@ public class MySQLDaprKeyValueAdapter extends AbstractDaprKeyValueAdapter {
     Assert.hasText(keyspace, "Keyspace must not be empty");
     Assert.notNull(type, "Type must not be null");
 
-    String sql = createSql(SELECT_BY_FILTER_PATTERN, keyspace, query);
+    Object criteria = query.getCriteria();
+
+    if (criteria == null) {
+      return getAllOf(keyspace, type);
+    }
+
+    String sql = createSql(SELECT_BY_FILTER_PATTERN, keyspace, criteria);
     List<JsonNode> result = queryUsingBinding(sql, FILTER_TYPE_REF);
 
     return convertValues(result, type);
@@ -124,7 +130,13 @@ public class MySQLDaprKeyValueAdapter extends AbstractDaprKeyValueAdapter {
     Assert.notNull(query, "Query must not be null");
     Assert.hasText(keyspace, "Keyspace must not be empty");
 
-    String sql = createSql(COUNT_BY_FILTER_PATTERN, keyspace, query);
+    Object criteria = query.getCriteria();
+
+    if (criteria == null) {
+      return count(keyspace);
+    }
+
+    String sql = createSql(COUNT_BY_FILTER_PATTERN, keyspace, criteria);
     List<JsonNode> result = queryUsingBinding(sql, COUNT_TYPE_REF);
 
     return extractCount(result);
@@ -140,9 +152,9 @@ public class MySQLDaprKeyValueAdapter extends AbstractDaprKeyValueAdapter {
     return String.format(sqlPattern, keyspaceFilter);
   }
 
-  private String createSql(String sqlPattern, String keyspace, KeyValueQuery<?> query) {
+  private String createSql(String sqlPattern, String keyspace, Object criteria) {
     String keyspaceFilter = getKeyspaceFilter(keyspace);
-    SpelExpression expression = PARSER.parseRaw(query.getCriteria().toString());
+    SpelExpression expression = PARSER.parseRaw(criteria.toString());
     SpelNode leftNode = expression.getAST().getChild(0);
     SpelNode rightNode = expression.getAST().getChild(1);
     String left = String.format("'$.%s'", leftNode.toStringAST());

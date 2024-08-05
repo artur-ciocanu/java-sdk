@@ -64,7 +64,7 @@ class DaprPredicateBuilder {
   }
 
   public Predicate<Object> isLessThan(Object value) {
-    return new DaprPredicate(part.getProperty(), value, o -> Comparators.nullsHigh().compare(o, value) == -1);
+    return new DaprPredicate(part.getProperty(), value, o -> Comparators.nullsHigh().compare(o, value) < 0);
   }
 
   public Predicate<Object> isLessThanEqual(Object value) {
@@ -72,21 +72,11 @@ class DaprPredicateBuilder {
   }
 
   public Predicate<Object> isGreaterThan(Object value) {
-    return new DaprPredicate(part.getProperty(), value, o -> Comparators.nullsHigh().compare(o, value) == 1);
+    return new DaprPredicate(part.getProperty(), value, o -> Comparators.nullsHigh().compare(o, value) > 0);
   }
 
   public Predicate<Object> isGreaterThanEqual(Object value) {
     return new DaprPredicate(part.getProperty(), value, o -> Comparators.nullsHigh().compare(o, value) >= 0);
-  }
-
-  public Predicate<Object> matches(Pattern pattern) {
-    return new DaprPredicate(part.getProperty(), null, o -> {
-      if (o == null) {
-        return false;
-      }
-
-      return pattern.matcher(o.toString()).find();
-    });
   }
 
   public Predicate<Object> matches(Object value) {
