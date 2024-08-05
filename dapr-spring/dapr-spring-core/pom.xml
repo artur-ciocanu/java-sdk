@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>dapr-spring-core</artifactId>
-  <name>Dapr Spring Core</name>
+  <name>dapr-spring-core</name>
   <description>Dapr Spring Core</description>
   <packaging>jar</packaging>
 

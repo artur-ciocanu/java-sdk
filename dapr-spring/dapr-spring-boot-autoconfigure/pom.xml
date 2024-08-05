@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>dapr-spring-boot-autoconfigure</artifactId>
-  <name>Dapr Spring Boot Autoconfigure</name>
+  <name>dapr-spring-boot-autoconfigure</name>
   <description>Dapr Spring Boot Autoconfigure</description>
   <packaging>jar</packaging>
 

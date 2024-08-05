@@ -31,6 +31,7 @@
     <testcontainers-dapr.version>0.12.0-SNAPSHOT</testcontainers-dapr.version>
     <testcontainers-test.version>1.19.8</testcontainers-test.version>
     <dapr.sdk.version>1.12.0-SNAPSHOT</dapr.sdk.version>
+    <dapr-workflows.sdk.version>0.12.0-SNAPSHOT</dapr-workflows.sdk.version>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
     <maven.compiler.release>17</maven.compiler.release>
