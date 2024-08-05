@@ -13,9 +13,8 @@ limitations under the License.
 
 package io.dapr.it.spring.boot.autoconfigure.pubsub;
 
-import io.dapr.spring.boot.autoconfigure.statestore.DaprStateStoreAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication(exclude = {DaprStateStoreAutoConfiguration.class})
+@SpringBootApplication
 public class TestApplication {
 }

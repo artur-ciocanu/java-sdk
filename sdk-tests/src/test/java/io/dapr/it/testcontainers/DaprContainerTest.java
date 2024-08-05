@@ -23,10 +23,10 @@ import io.dapr.testcontainers.DaprContainer;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.testcontainers.Testcontainers;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.io.IOException;
 import java.util.Map;
@@ -48,6 +48,7 @@ import static java.util.Collections.singletonMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+@Testcontainers
 public class DaprContainerTest {
 
   // Time-to-live for messages published.
@@ -57,10 +58,10 @@ public class DaprContainerTest {
   private static final String PUBSUB_NAME = "pubsub";
   private static final String PUBSUB_TOPIC_NAME = "topic";
 
-  @ClassRule
+  @Container
   public static WireMockRule wireMockRule = new WireMockRule(wireMockConfig().port(8081));
 
-  @ClassRule
+  @Container
   public static DaprContainer daprContainer = new DaprContainer("daprio/daprd")
       .withAppName("dapr-app")
       .withAppPort(8081)
@@ -69,10 +70,10 @@ public class DaprContainerTest {
   /**
    * Sets the Dapr properties for the test.
    */
-  @BeforeClass
+  @BeforeAll
   public static void setDaprProperties() {
     configStub();
-    Testcontainers.exposeHostPorts(8081);
+    org.testcontainers.Testcontainers.exposeHostPorts(8081);
     System.setProperty("dapr.grpc.port", Integer.toString(daprContainer.getGrpcPort()));
     System.setProperty("dapr.http.port", Integer.toString(daprContainer.getHttpPort()));
   }
