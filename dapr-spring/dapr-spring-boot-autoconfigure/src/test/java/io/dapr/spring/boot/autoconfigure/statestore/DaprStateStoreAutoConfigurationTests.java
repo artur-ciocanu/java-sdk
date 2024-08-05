@@ -36,6 +36,7 @@ class DaprStateStoreAutoConfigurationTests {
   );
 
   private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
+      .withPropertyValues("dapr.statestore.enabled=true")
       .withBean(DaprStateStoreProperties.class, () -> PROPERTIES)
       .withBean(KeyValueAdapterResolver.class, () -> RESOLVER)
       .withConfiguration(AUTO_CONFIGURATIONS);
