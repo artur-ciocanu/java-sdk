@@ -17,7 +17,10 @@ import io.dapr.testcontainers.Component;
 import io.dapr.testcontainers.DaprContainer;
 import io.dapr.testcontainers.DaprLogLevel;
 import org.junit.jupiter.api.BeforeAll;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.Network;
+import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -25,6 +28,8 @@ import java.util.Collections;
 
 @Testcontainers
 public abstract class AbstractDaprSpringBootAutoconfigureBaseIT {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(AbstractDaprSpringBootAutoconfigureBaseIT.class);
 
   public static Network daprNetwork = Network.newNetwork();
 
@@ -35,6 +40,7 @@ public abstract class AbstractDaprSpringBootAutoconfigureBaseIT {
       .withComponent(new Component("pubsub", "pubsub.in-memory", "v1", Collections.emptyMap()))
       .withAppPort(8080)
       .withDaprLogLevel(DaprLogLevel.DEBUG)
+      .withLogConsumer(new Slf4jLogConsumer(LOGGER))
       .withAppChannelAddress("host.testcontainers.internal");
 
   @BeforeAll

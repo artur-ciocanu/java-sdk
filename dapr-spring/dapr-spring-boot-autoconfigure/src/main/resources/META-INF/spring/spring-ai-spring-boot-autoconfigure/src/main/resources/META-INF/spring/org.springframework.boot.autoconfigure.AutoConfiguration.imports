@@ -1,3 +1,0 @@
-io.dapr.spring.boot.autoconfigure.client.DaprClientAutoConfiguration
-io.dapr.spring.boot.autoconfigure.pubsub.DaprPubSubAutoConfiguration
-io.dapr.spring.boot.autoconfigure.statestore.DaprStateStoreAutoConfiguration
