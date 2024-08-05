@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>dapr-spring-messaging</artifactId>
-  <name>Dapr Spring Messaging</name>
+  <name>dapr-spring-messaging</name>
   <description>Dapr Spring Messaging</description>
   <packaging>jar</packaging>
 

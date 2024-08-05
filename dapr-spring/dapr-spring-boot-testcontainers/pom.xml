@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>dapr-spring-boot-testcontainers</artifactId>
-  <name>Dapr Spring Boot Testcontainers</name>
+  <name>dapr-spring-boot-testcontainers</name>
   <description>Dapr Spring Boot Testcontainers</description>
   <packaging>jar</packaging>
 
@@ -18,6 +18,16 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-testcontainers</artifactId>
+        <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.testcontainers</groupId>
@@ -39,19 +49,9 @@
       <version>${testcontainers-dapr.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-testcontainers</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>io.dapr</groupId>
       <artifactId>dapr-sdk-workflows</artifactId>
-      <version>${dapr.sdk-workflows.version}</version>
+      <version>${dapr-workflows.sdk.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

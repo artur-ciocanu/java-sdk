@@ -11,7 +11,7 @@
   </parent>
 
   <artifactId>dapr-spring-boot-starter</artifactId>
-  <name>Dapr Client Spring Boot Starter</name>
+  <name>dapr-spring-boot-starter</name>
   <description>Dapr Client Spring Boot Starter</description>
   <packaging>jar</packaging>
 
