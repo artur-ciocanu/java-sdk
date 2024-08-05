@@ -30,7 +30,6 @@ import org.springframework.data.keyvalue.core.KeyValueAdapter;
 
 @AutoConfiguration(after = DaprClientAutoConfiguration.class)
 @ConditionalOnClass({DaprClient.class, KeyValueAdapter.class})
-@ConditionalOnProperty(name = "dapr.statestore.enabled", havingValue = "true")
 @EnableConfigurationProperties(DaprStateStoreProperties.class)
 public class DaprStateStoreAutoConfiguration {
 
