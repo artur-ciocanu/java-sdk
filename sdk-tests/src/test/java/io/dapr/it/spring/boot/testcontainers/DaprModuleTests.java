@@ -11,7 +11,7 @@
 limitations under the License.
 */
 
-package io.dapr.testcontainers.module;
+package io.dapr.it.spring.boot.testcontainers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dapr.workflows.client.DaprWorkflowClient;

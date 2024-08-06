@@ -143,6 +143,12 @@
     </dependency>
     <dependency>
       <groupId>io.dapr</groupId>
+      <artifactId>dapr-sdk-workflows</artifactId>
+      <version>${dapr.alpha.sdk.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.dapr</groupId>
       <artifactId>dapr-sdk-springboot</artifactId>
       <version>${dapr.sdk.version}</version>
       <scope>test</scope>
@@ -172,12 +178,23 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>io.dapr.spring</groupId>
+      <artifactId>dapr-spring-boot-testcontainers</artifactId>
+      <version>${dapr.alpha.sdk.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.data</groupId>
       <artifactId>spring-data-keyvalue</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-testcontainers</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

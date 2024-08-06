@@ -11,23 +11,18 @@
 limitations under the License.
 */
 
-package io.dapr.testcontainers.module;
+package io.dapr.it.spring.boot.testcontainers;
 
-import io.dapr.testcontainers.DaprModule;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.testcontainers.context.ImportTestcontainers;
+import io.dapr.workflows.runtime.WorkflowActivity;
+import io.dapr.workflows.runtime.WorkflowActivityContext;
 
-@SpringBootApplication
-public class MyTestWithWorkflowsApplication {
+public class SecondActivity implements WorkflowActivity {
 
-  public static void main(String[] args) {
-    SpringApplication.run(MyTestWithWorkflowsApplication.class, args);
-  }
-
-  @ImportTestcontainers(DaprModule.class)
-  static class DaprTestConfiguration {
-
+  @Override
+  public Object run(WorkflowActivityContext ctx) {
+    TestWorkflowPayload workflowPayload = ctx.getInput(TestWorkflowPayload.class);
+    workflowPayload.getPayloads().add("Second Activity");
+    return workflowPayload;
   }
 
 }
