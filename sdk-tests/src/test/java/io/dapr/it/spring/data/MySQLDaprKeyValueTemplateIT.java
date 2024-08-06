@@ -75,6 +75,7 @@ public class MySQLDaprKeyValueTemplateIT extends AbstractDaprSpringDataBaseIT {
       .withAppPort(8080)
       .withDaprLogLevel(DaprLogLevel.DEBUG)
       .withAppChannelAddress("host.testcontainers.internal")
+      .withExposedPorts(3500, 50001)
       .withLogConsumer(new Slf4jLogConsumer(LOGGER))
       .dependsOn(MY_SQL_CONTAINER);
 

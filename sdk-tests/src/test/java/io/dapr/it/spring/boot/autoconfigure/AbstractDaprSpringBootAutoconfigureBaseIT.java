@@ -41,7 +41,8 @@ public abstract class AbstractDaprSpringBootAutoconfigureBaseIT {
       .withAppPort(8080)
       .withDaprLogLevel(DaprLogLevel.DEBUG)
       .withLogConsumer(new Slf4jLogConsumer(LOGGER))
-      .withAppChannelAddress("host.testcontainers.internal");
+      .withAppChannelAddress("host.testcontainers.internal")
+      .withExposedPorts(3500, 50001);
 
   @BeforeAll
   static void beforeAll() {

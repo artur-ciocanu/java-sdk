@@ -51,6 +51,7 @@ public abstract class AbstractPostgreSQLBaseIT extends AbstractDaprSpringDataBas
       .withAppPort(8080)
       .withDaprLogLevel(DaprLogLevel.DEBUG)
       .withAppChannelAddress("host.testcontainers.internal")
+      .withExposedPorts(3500, 50001)
       .dependsOn(POSTGRE_SQL_CONTAINER);
 
   @BeforeAll
