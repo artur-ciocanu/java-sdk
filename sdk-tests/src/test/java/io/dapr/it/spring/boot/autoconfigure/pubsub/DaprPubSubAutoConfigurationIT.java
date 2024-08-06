@@ -13,11 +13,13 @@ limitations under the License.
 
 package io.dapr.it.spring.boot.autoconfigure.pubsub;
 
+import io.dapr.client.DaprClient;
 import io.dapr.client.domain.CloudEvent;
 import io.dapr.it.spring.boot.autoconfigure.AbstractDaprSpringBootAutoconfigureBaseIT;
 import io.dapr.spring.boot.autoconfigure.client.DaprClientAutoConfiguration;
 import io.dapr.spring.boot.autoconfigure.pubsub.DaprPubSubAutoConfiguration;
 import io.dapr.spring.messaging.DaprMessagingTemplate;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +48,9 @@ public class DaprPubSubAutoConfigurationIT extends AbstractDaprSpringBootAutocon
   private static final String TOPIC = "mockTopic";
 
   @Autowired
+  private DaprClient daprClient;
+
+  @Autowired
   private DaprMessagingTemplate<String> messagingTemplate;
 
   @Autowired
@@ -53,6 +58,8 @@ public class DaprPubSubAutoConfigurationIT extends AbstractDaprSpringBootAutocon
 
   @Test
   public void testDaprMessagingTemplate() throws InterruptedException {
+    daprClient.waitForSidecar(10000).block();
+
     for (int i = 0; i < 10; i++) {
       var msg = "ProduceAndReadWithPrimitiveMessageType:" + i;
       messagingTemplate.send(TOPIC, msg);
