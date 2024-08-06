@@ -56,10 +56,13 @@ public class DaprPubSubAutoConfigurationIT extends AbstractDaprSpringBootAutocon
   @Autowired
   private TestRestController testRestController;
 
+  @BeforeEach
+  public void setUp() {
+    daprClient.waitForSidecar(10000).block();
+  }
+
   @Test
   public void testDaprMessagingTemplate() throws InterruptedException {
-    daprClient.waitForSidecar(10000).block();
-
     for (int i = 0; i < 10; i++) {
       var msg = "ProduceAndReadWithPrimitiveMessageType:" + i;
       messagingTemplate.send(TOPIC, msg);

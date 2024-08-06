@@ -53,6 +53,8 @@ public class PostgreSQLDaprKeyValueTemplateIT extends AbstractPostgreSQLBaseIT {
         BINDING_NAME
     );
     keyValueTemplate = new DaprKeyValueTemplate(daprKeyValueAdapterResolver);
+
+    daprClient.waitForSidecar(10000).block();
   }
 
   /**

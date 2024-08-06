@@ -41,12 +41,13 @@ public abstract class AbstractDaprSpringBootAutoconfigureBaseIT {
       .withAppPort(8080)
       .withDaprLogLevel(DaprLogLevel.DEBUG)
       .withLogConsumer(new Slf4jLogConsumer(LOGGER))
-      .withAppChannelAddress("host.testcontainers.internal")
-      .withExposedPorts(3500, 50001);
+      .withAppChannelAddress("host.testcontainers.internal");
 
   @BeforeAll
   static void beforeAll() {
     org.testcontainers.Testcontainers.exposeHostPorts(8080);
+
+    DAPR_CONTAINER.start();
 
     System.setProperty("dapr.grpc.port", Integer.toString(DAPR_CONTAINER.getGrpcPort()));
     System.setProperty("dapr.http.port", Integer.toString(DAPR_CONTAINER.getHttpPort()));
