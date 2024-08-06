@@ -29,8 +29,6 @@ import java.util.Collections;
 @Testcontainers
 public abstract class AbstractDaprSpringBootAutoconfigureBaseIT {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(AbstractDaprSpringBootAutoconfigureBaseIT.class);
-
   public static Network DAPR_NETWORK = Network.newNetwork();
 
   @Container
@@ -40,7 +38,7 @@ public abstract class AbstractDaprSpringBootAutoconfigureBaseIT {
       .withComponent(new Component("pubsub", "pubsub.in-memory", "v1", Collections.emptyMap()))
       .withAppPort(8080)
       .withDaprLogLevel(DaprLogLevel.DEBUG)
-      .withLogConsumer(new Slf4jLogConsumer(LOGGER))
+      .withLogConsumer(outputFrame -> System.out.println(outputFrame.getUtf8String()))
       .withAppChannelAddress("host.testcontainers.internal");
 
   @BeforeAll

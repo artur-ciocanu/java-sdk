@@ -50,6 +50,7 @@ public abstract class AbstractPostgreSQLBaseIT extends AbstractDaprSpringDataBas
       .withComponent(new Component(PUBSUB_NAME, "pubsub.in-memory", "v1", Collections.emptyMap()))
       .withAppPort(8080)
       .withDaprLogLevel(DaprLogLevel.DEBUG)
+      .withLogConsumer(outputFrame -> System.out.println(outputFrame.getUtf8String()))
       .withAppChannelAddress("host.testcontainers.internal")
       .dependsOn(POSTGRE_SQL_CONTAINER);
 
