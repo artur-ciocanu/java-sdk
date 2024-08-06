@@ -11,7 +11,7 @@
 limitations under the License.
 */
 
-package io.dapr.testcontainers.module;
+package io.dapr.it.spring.boot.testcontainers;
 
 import io.dapr.workflows.Workflow;
 import io.dapr.workflows.WorkflowStub;

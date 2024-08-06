@@ -14,6 +14,7 @@ limitations under the License.
 package io.dapr.it.testcontainers;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import io.dapr.client.DaprClient;
 import io.dapr.client.DaprClientBuilder;
 import io.dapr.client.domain.Metadata;
@@ -25,6 +26,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -58,8 +60,10 @@ public class DaprContainerTest {
   private static final String PUBSUB_NAME = "pubsub";
   private static final String PUBSUB_TOPIC_NAME = "topic";
 
-  @Container
-  public static WireMockRule wireMockRule = new WireMockRule(wireMockConfig().port(8081));
+  @RegisterExtension
+  public static WireMockExtension wireMockExtension = WireMockExtension.newInstance()
+      .options(wireMockConfig().port(8081))
+      .build();
 
   @Container
   public static DaprContainer daprContainer = new DaprContainer("daprio/daprd")
