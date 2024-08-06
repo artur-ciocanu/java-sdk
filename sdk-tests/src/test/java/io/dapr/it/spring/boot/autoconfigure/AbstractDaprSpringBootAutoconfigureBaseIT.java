@@ -31,12 +31,12 @@ public abstract class AbstractDaprSpringBootAutoconfigureBaseIT {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AbstractDaprSpringBootAutoconfigureBaseIT.class);
 
-  public static Network daprNetwork = Network.newNetwork();
+  public static Network DAPR_NETWORK = Network.newNetwork();
 
   @Container
-  public static DaprContainer daprContainer = new DaprContainer("daprio/daprd:1.13.2")
+  public static DaprContainer DAPR_CONTAINER = new DaprContainer("daprio/daprd:1.13.2")
       .withAppName("local-dapr-app")
-      .withNetwork(daprNetwork)
+      .withNetwork(DAPR_NETWORK)
       .withComponent(new Component("pubsub", "pubsub.in-memory", "v1", Collections.emptyMap()))
       .withAppPort(8080)
       .withDaprLogLevel(DaprLogLevel.DEBUG)
@@ -45,9 +45,11 @@ public abstract class AbstractDaprSpringBootAutoconfigureBaseIT {
 
   @BeforeAll
   static void beforeAll() {
-    org.testcontainers.Testcontainers.exposeHostPorts(8080);
-    System.setProperty("dapr.grpc.port", Integer.toString(daprContainer.getGrpcPort()));
-    System.setProperty("dapr.http.port", Integer.toString(daprContainer.getHttpPort()));
+    int[] exposedPorts = new int[]{8080, DAPR_CONTAINER.getGrpcPort(), DAPR_CONTAINER.getHttpPort()};
+
+    org.testcontainers.Testcontainers.exposeHostPorts(exposedPorts);
+    System.setProperty("dapr.grpc.port", Integer.toString(DAPR_CONTAINER.getGrpcPort()));
+    System.setProperty("dapr.http.port", Integer.toString(DAPR_CONTAINER.getHttpPort()));
   }
 
 }

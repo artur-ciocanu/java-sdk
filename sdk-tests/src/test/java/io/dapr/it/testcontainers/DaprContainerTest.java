@@ -13,7 +13,6 @@ limitations under the License.
 
 package io.dapr.it.testcontainers;
 
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import io.dapr.client.DaprClient;
 import io.dapr.client.DaprClientBuilder;
@@ -47,8 +46,8 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static java.util.Collections.singletonMap;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Testcontainers
 public class DaprContainerTest {
@@ -102,14 +101,15 @@ public class DaprContainerTest {
 
   @Test
   public void testDaprContainerDefaults() {
+    assertEquals(2,
+        daprContainer.getComponents().size(),
+        "The pubsub and kvstore component should be configured by default"
+        );
     assertEquals(
-        "The pubsub and kvstore component should be configured by default",
-        2,
-        daprContainer.getComponents().size());
-    assertEquals(
-        "A subscription should be configured by default if none is provided",
         1,
-        daprContainer.getSubscriptions().size());
+        daprContainer.getSubscriptions().size(),
+        "A subscription should be configured by default if none is provided"
+        );
   }
 
   @Test
