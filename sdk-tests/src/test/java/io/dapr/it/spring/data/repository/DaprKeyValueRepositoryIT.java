@@ -42,7 +42,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = DaprClientAutoConfiguration.class)
+@ContextConfiguration(
+    classes = {DaprClientAutoConfiguration.class, DaprKeyValueRepositoryIT.Config.class}
+)
 public class DaprKeyValueRepositoryIT extends AbstractPostgreSQLBaseIT {
 
   @Autowired
@@ -114,7 +116,6 @@ public class DaprKeyValueRepositoryIT extends AbstractPostgreSQLBaseIT {
     public DaprKeyValueTemplate daprKeyValueTemplate(KeyValueAdapterResolver keyValueAdapterResolver) {
       return new DaprKeyValueTemplate(keyValueAdapterResolver);
     }
-
   }
 
 }
