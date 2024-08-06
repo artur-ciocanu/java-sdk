@@ -86,9 +86,7 @@ public class MySQLDaprKeyValueTemplateIT extends AbstractDaprSpringDataBaseIT {
 
   @BeforeAll
   static void beforeAll() {
-    int[] exposedPorts = new int[]{8080, DAPR_CONTAINER.getGrpcPort(), DAPR_CONTAINER.getHttpPort()};
-
-    org.testcontainers.Testcontainers.exposeHostPorts(exposedPorts);
+    org.testcontainers.Testcontainers.exposeHostPorts(8080);
 
     System.setProperty("dapr.grpc.port", Integer.toString(DAPR_CONTAINER.getGrpcPort()));
     System.setProperty("dapr.http.port", Integer.toString(DAPR_CONTAINER.getHttpPort()));

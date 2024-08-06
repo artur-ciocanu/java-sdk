@@ -51,14 +51,11 @@ public abstract class AbstractPostgreSQLBaseIT extends AbstractDaprSpringDataBas
       .withAppPort(8080)
       .withDaprLogLevel(DaprLogLevel.DEBUG)
       .withAppChannelAddress("host.testcontainers.internal")
-      .withExposedPorts(3500, 50001)
       .dependsOn(POSTGRE_SQL_CONTAINER);
 
   @BeforeAll
   static void beforeAll() {
-    int[] exposedPorts = new int[]{8080, DAPR_CONTAINER.getGrpcPort(), DAPR_CONTAINER.getHttpPort()};
-
-    org.testcontainers.Testcontainers.exposeHostPorts(exposedPorts);
+    org.testcontainers.Testcontainers.exposeHostPorts(8080);
 
     System.setProperty("dapr.grpc.port", Integer.toString(DAPR_CONTAINER.getGrpcPort()));
     System.setProperty("dapr.http.port", Integer.toString(DAPR_CONTAINER.getHttpPort()));

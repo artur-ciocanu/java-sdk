@@ -33,14 +33,22 @@ public class DaprClientAutoConfiguration {
   DaprClientBuilderConfigurer daprClientBuilderConfigurer(ObjectProvider<DaprClientCustomizer> customizerProvider) {
     DaprClientBuilderConfigurer configurer = new DaprClientBuilderConfigurer();
     configurer.setDaprClientCustomizer(customizerProvider.orderedStream().collect(Collectors.toList()));
+
     return configurer;
   }
 
   @Bean
   @ConditionalOnMissingBean
   DaprClientBuilder daprClientBuilder(DaprClientBuilderConfigurer daprClientBuilderConfigurer) {
-    var daprClientBuilder = new DaprClientBuilder();
-    return daprClientBuilderConfigurer.configure(daprClientBuilder);
+    DaprClientBuilder builder = new DaprClientBuilder();
+
+    return daprClientBuilderConfigurer.configure(builder);
+  }
+
+  @Bean
+  @ConditionalOnMissingBean
+  DaprClient daprClient(DaprClientBuilder daprClientBuilder) {
+    return daprClientBuilder.build();
   }
 
 }
