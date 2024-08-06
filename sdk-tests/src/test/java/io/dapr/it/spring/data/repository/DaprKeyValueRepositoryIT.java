@@ -15,9 +15,9 @@ package io.dapr.it.spring.data.repository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dapr.client.DaprClient;
-import io.dapr.client.DaprClientBuilder;
 import io.dapr.it.spring.data.AbstractPostgreSQLBaseIT;
 import io.dapr.it.spring.data.TestType;
+import io.dapr.spring.boot.autoconfigure.client.DaprClientAutoConfiguration;
 import io.dapr.spring.data.DaprKeyValueAdapterResolver;
 import io.dapr.spring.data.DaprKeyValueTemplate;
 import io.dapr.spring.data.KeyValueAdapterResolver;
@@ -42,14 +42,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration
+@ContextConfiguration(classes = DaprClientAutoConfiguration.class)
 public class DaprKeyValueRepositoryIT extends AbstractPostgreSQLBaseIT {
+
+  @Autowired
+  private DaprClient daprClient;
 
   @Autowired
   private TestTypeRepository repository;
 
   @BeforeEach
   public void setUp() {
+    daprClient.waitForSidecar(10000).block();
     repository.deleteAll();
   }
 
@@ -102,20 +106,13 @@ public class DaprKeyValueRepositoryIT extends AbstractPostgreSQLBaseIT {
     }
 
     @Bean
-    public KeyValueAdapterResolver keyValueAdapterResolver(DaprClientBuilder daprClientBuilder, ObjectMapper mapper) {
-      DaprClient daprClient = daprClientBuilder.build();
-
+    public KeyValueAdapterResolver keyValueAdapterResolver(DaprClient daprClient, ObjectMapper mapper) {
       return new DaprKeyValueAdapterResolver(daprClient, mapper, STATE_STORE_NAME, BINDING_NAME);
     }
 
     @Bean
     public DaprKeyValueTemplate daprKeyValueTemplate(KeyValueAdapterResolver keyValueAdapterResolver) {
       return new DaprKeyValueTemplate(keyValueAdapterResolver);
-    }
-
-    @Bean
-    public DaprClientBuilder daprClientBuilder() {
-      return new DaprClientBuilder();
     }
 
   }
