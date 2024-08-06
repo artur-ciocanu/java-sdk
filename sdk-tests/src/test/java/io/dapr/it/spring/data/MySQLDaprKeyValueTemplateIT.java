@@ -88,6 +88,8 @@ public class MySQLDaprKeyValueTemplateIT extends AbstractDaprSpringDataBaseIT {
   static void beforeAll() {
     org.testcontainers.Testcontainers.exposeHostPorts(8080);
 
+    DAPR_CONTAINER.start();
+
     System.setProperty("dapr.grpc.port", Integer.toString(DAPR_CONTAINER.getGrpcPort()));
     System.setProperty("dapr.http.port", Integer.toString(DAPR_CONTAINER.getHttpPort()));
   }
@@ -102,6 +104,8 @@ public class MySQLDaprKeyValueTemplateIT extends AbstractDaprSpringDataBaseIT {
         BINDING_NAME
     );
     keyValueTemplate = new DaprKeyValueTemplate(daprKeyValueResolver);
+
+    daprClient.waitForSidecar(10000).block();
   }
 
   private static Map<String, String> createStateStoreProperties() {
