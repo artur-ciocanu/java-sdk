@@ -24,6 +24,7 @@ import io.dapr.testcontainers.DaprContainer;
 import io.dapr.testcontainers.DaprLogLevel;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,21 +78,29 @@ public class MySQLDaprKeyValueTemplateIT extends AbstractDaprSpringDataBaseIT {
       .withLogConsumer(new Slf4jLogConsumer(LOGGER))
       .dependsOn(MY_SQL_CONTAINER);
 
-  private final DaprClient daprClient = new DaprClientBuilder().build();
   private final ObjectMapper mapper = new ObjectMapper();
-  private final KeyValueAdapterResolver daprKeyValueAdapter = new DaprKeyValueAdapterResolver(
-      daprClient,
-      mapper,
-      STATE_STORE_NAME,
-      BINDING_NAME
-  );
-  private final DaprKeyValueTemplate keyValueTemplate = new DaprKeyValueTemplate(daprKeyValueAdapter);
+
+  private DaprClient daprClient;
+  private DaprKeyValueTemplate keyValueTemplate;
 
   @BeforeAll
   static void beforeAll() {
     org.testcontainers.Testcontainers.exposeHostPorts(8080);
+
     System.setProperty("dapr.grpc.port", Integer.toString(DAPR_CONTAINER.getGrpcPort()));
     System.setProperty("dapr.http.port", Integer.toString(DAPR_CONTAINER.getHttpPort()));
+  }
+
+  @BeforeEach
+  public void setUp() {
+    daprClient = new DaprClientBuilder().build();
+    KeyValueAdapterResolver daprKeyValueResolver = new DaprKeyValueAdapterResolver(
+        daprClient,
+        mapper,
+        STATE_STORE_NAME,
+        BINDING_NAME
+    );
+    keyValueTemplate = new DaprKeyValueTemplate(daprKeyValueResolver);
   }
 
   private static Map<String, String> createStateStoreProperties() {

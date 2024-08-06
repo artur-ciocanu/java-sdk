@@ -20,6 +20,7 @@ import io.dapr.spring.data.DaprKeyValueAdapterResolver;
 import io.dapr.spring.data.DaprKeyValueTemplate;
 import io.dapr.spring.data.KeyValueAdapterResolver;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 
@@ -37,15 +38,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SuppressWarnings("AbbreviationAsWordInName")
 public class PostgreSQLDaprKeyValueTemplateIT extends AbstractPostgreSQLBaseIT {
 
-  private final DaprClient daprClient = new DaprClientBuilder().build();
   private final ObjectMapper mapper = new ObjectMapper();
-  private final KeyValueAdapterResolver daprKeyValueAdapter = new DaprKeyValueAdapterResolver(
-      daprClient,
-      mapper,
-      STATE_STORE_NAME,
-      BINDING_NAME
-  );
-  private final DaprKeyValueTemplate keyValueTemplate = new DaprKeyValueTemplate(daprKeyValueAdapter);
+
+  private DaprClient daprClient;
+  private DaprKeyValueTemplate keyValueTemplate;
+
+  @BeforeEach
+  public void setUp() {
+    daprClient = new DaprClientBuilder().build();
+    KeyValueAdapterResolver daprKeyValueAdapterResolver = new DaprKeyValueAdapterResolver(
+        daprClient,
+        mapper,
+        STATE_STORE_NAME,
+        BINDING_NAME
+    );
+    keyValueTemplate = new DaprKeyValueTemplate(daprKeyValueAdapterResolver);
+  }
 
   /**
    * Cleans up the state store after each test.
