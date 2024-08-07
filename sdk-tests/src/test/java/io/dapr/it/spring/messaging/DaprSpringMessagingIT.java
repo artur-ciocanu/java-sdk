@@ -23,7 +23,6 @@ import io.dapr.testcontainers.DaprLogLevel;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,14 +30,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.testcontainers.containers.Network;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import uk.org.webcompere.systemstubs.environment.EnvironmentVariables;
-import uk.org.webcompere.systemstubs.jupiter.SystemStub;
-import uk.org.webcompere.systemstubs.jupiter.SystemStubsExtension;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -52,7 +46,6 @@ import static org.assertj.core.api.Assertions.assertThat;
     properties = {"dapr.pubsub.name=pubsub"}
 )
 @Testcontainers
-@ExtendWith(SystemStubsExtension.class)
 public class DaprSpringMessagingIT {
 
   private static final Logger logger = LoggerFactory.getLogger(DaprSpringMessagingIT.class);
@@ -71,9 +64,6 @@ public class DaprSpringMessagingIT {
       .withLogConsumer(outputFrame -> System.out.println(outputFrame.getUtf8String()))
       .withAppChannelAddress("host.testcontainers.internal");
 
-  @SystemStub
-  private static EnvironmentVariables environmentVariables;
-
   @Autowired
   private DaprClient daprClient;
 
@@ -86,24 +76,10 @@ public class DaprSpringMessagingIT {
   @BeforeAll
   static void beforeAll() {
     org.testcontainers.Testcontainers.exposeHostPorts(8080);
-
-    Map<Object, Object> properties = new HashMap<>();
-
-    properties.put("DAPR_GRPC_PORT", Integer.toString(DAPR_CONTAINER.getGrpcPort()));
-    properties.put("DAPR_HTTP_PORT", Integer.toString(DAPR_CONTAINER.getHttpPort()));
-
-    environmentVariables.set(properties);
   }
 
   @BeforeEach
   public void setUp() {
-    Map<String, String> properties = new HashMap<>();
-
-    properties.put("DAPR_GRPC_PORT", Integer.toString(DAPR_CONTAINER.getGrpcPort()));
-    properties.put("DAPR_HTTP_PORT", Integer.toString(DAPR_CONTAINER.getHttpPort()));
-
-    environmentVariables.set(properties);
-
     daprClient.waitForSidecar(10000).block();
   }
 

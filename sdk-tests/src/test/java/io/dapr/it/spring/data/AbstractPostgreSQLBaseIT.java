@@ -17,14 +17,10 @@ import io.dapr.testcontainers.Component;
 import io.dapr.testcontainers.DaprContainer;
 import io.dapr.testcontainers.DaprLogLevel;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import uk.org.webcompere.systemstubs.environment.EnvironmentVariables;
-import uk.org.webcompere.systemstubs.jupiter.SystemStub;
-import uk.org.webcompere.systemstubs.jupiter.SystemStubsExtension;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -36,7 +32,6 @@ import static io.dapr.it.spring.data.DaprSpringDataConstants.STATE_STORE_NAME;
 
 @SuppressWarnings("AbbreviationAsWordInName")
 @Testcontainers
-@ExtendWith(SystemStubsExtension.class)
 public abstract class AbstractPostgreSQLBaseIT {
   private static final String CONNECTION_STRING =
       "host=postgres user=postgres password=password port=5432 connect_timeout=10 database=dapr_db";
@@ -45,9 +40,6 @@ public abstract class AbstractPostgreSQLBaseIT {
   private static final Map<String, String> BINDING_PROPERTIES = Collections.singletonMap("connectionString", CONNECTION_STRING);
 
   private static final Network DAPR_NETWORK = Network.newNetwork();
-
-  @SystemStub
-  private static EnvironmentVariables environmentVariables;
 
   @Container
   private static final PostgreSQLContainer<?> POSTGRE_SQL_CONTAINER = new PostgreSQLContainer<>("postgres:16-alpine")
@@ -74,13 +66,6 @@ public abstract class AbstractPostgreSQLBaseIT {
   @BeforeAll
   static void beforeAll() {
     org.testcontainers.Testcontainers.exposeHostPorts(8080);
-
-    Map<Object, Object> properties = new HashMap<>();
-
-    properties.put("DAPR_GRPC_PORT", Integer.toString(DAPR_CONTAINER.getGrpcPort()));
-    properties.put("DAPR_HTTP_PORT", Integer.toString(DAPR_CONTAINER.getHttpPort()));
-
-    environmentVariables.set(properties);
   }
 
   private static Map<String, String> createStateStoreProperties() {
