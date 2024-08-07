@@ -13,6 +13,7 @@ limitations under the License.
 
 package io.dapr.spring.boot.autoconfigure.client;
 
+import io.dapr.client.DaprClient;
 import io.dapr.client.DaprClientBuilder;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
@@ -30,16 +31,17 @@ class DaprClientAutoConfigurationTests {
 
   @Test
   void daprClientBuilderConfigurer() {
-    contextRunner.run(context -> {
-      assertThat(context).hasSingleBean(DaprClientBuilderConfigurer.class);
-    });
+    contextRunner.run(context -> assertThat(context).hasSingleBean(DaprClientBuilderConfigurer.class));
   }
 
   @Test
   void daprClientBuilder() {
-    contextRunner.run(context -> {
-      assertThat(context).hasSingleBean(DaprClientBuilder.class);
-    });
+    contextRunner.run(context -> assertThat(context).hasSingleBean(DaprClientBuilder.class));
+  }
+
+  @Test
+  void daprClient() {
+    contextRunner.run(context -> assertThat(context).hasSingleBean(DaprClient.class));
   }
 
 }

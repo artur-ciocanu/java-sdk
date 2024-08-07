@@ -11,21 +11,26 @@
 limitations under the License.
 */
 
-package io.dapr.it.spring.boot.autoconfigure.pubsub;
+package io.dapr.it.spring.messaging;
 
 import io.dapr.client.DaprClient;
 import io.dapr.client.domain.CloudEvent;
-import io.dapr.it.spring.boot.autoconfigure.AbstractDaprSpringBootAutoconfigureBaseIT;
 import io.dapr.spring.boot.autoconfigure.client.DaprClientAutoConfiguration;
-import io.dapr.spring.boot.autoconfigure.pubsub.DaprPubSubAutoConfiguration;
 import io.dapr.spring.messaging.DaprMessagingTemplate;
+import io.dapr.testcontainers.Component;
+import io.dapr.testcontainers.DaprContainer;
+import io.dapr.testcontainers.DaprLogLevel;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.testcontainers.containers.Network;
+import org.testcontainers.junit.jupiter.Container;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,17 +40,28 @@ import static org.assertj.core.api.Assertions.assertThat;
     classes = {
         TestApplication.class,
         TestRestController.class,
-        TestTypeRepository.class,
+        TestDaprSpringMessagingConfiguration.class,
         DaprClientAutoConfiguration.class,
-        DaprPubSubAutoConfiguration.class,
     },
     properties = {"dapr.pubsub.name=pubsub"}
 )
-public class DaprPubSubAutoConfigurationIT extends AbstractDaprSpringBootAutoconfigureBaseIT {
+public class DaprSpringMessagingIT {
 
-  private static final Logger logger = LoggerFactory.getLogger(DaprPubSubAutoConfigurationIT.class);
+  private static final Logger logger = LoggerFactory.getLogger(DaprSpringMessagingIT.class);
 
   private static final String TOPIC = "mockTopic";
+
+  public static Network DAPR_NETWORK = Network.newNetwork();
+
+  @Container
+  private final static DaprContainer DAPR_CONTAINER = new DaprContainer("daprio/daprd:1.13.2")
+      .withAppName("local-dapr-app")
+      .withNetwork(DAPR_NETWORK)
+      .withComponent(new Component("pubsub", "pubsub.in-memory", "v1", Collections.emptyMap()))
+      .withAppPort(8080)
+      .withDaprLogLevel(DaprLogLevel.DEBUG)
+      .withLogConsumer(outputFrame -> System.out.println(outputFrame.getUtf8String()))
+      .withAppChannelAddress("host.testcontainers.internal");
 
   @Autowired
   private DaprClient daprClient;
@@ -55,6 +71,14 @@ public class DaprPubSubAutoConfigurationIT extends AbstractDaprSpringBootAutocon
 
   @Autowired
   private TestRestController testRestController;
+
+  @BeforeAll
+  static void beforeAll() {
+    org.testcontainers.Testcontainers.exposeHostPorts(8080);
+
+    System.setProperty("dapr.grpc.port", Integer.toString(DAPR_CONTAINER.getGrpcPort()));
+    System.setProperty("dapr.http.port", Integer.toString(DAPR_CONTAINER.getHttpPort()));
+  }
 
   @BeforeEach
   public void setUp() {

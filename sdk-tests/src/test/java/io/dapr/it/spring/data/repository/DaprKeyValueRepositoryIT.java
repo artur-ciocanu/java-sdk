@@ -13,20 +13,15 @@ limitations under the License.
 
 package io.dapr.it.spring.data.repository;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dapr.client.DaprClient;
 import io.dapr.it.spring.data.AbstractPostgreSQLBaseIT;
 import io.dapr.it.spring.data.TestType;
 import io.dapr.spring.boot.autoconfigure.client.DaprClientAutoConfiguration;
-import io.dapr.spring.data.DaprKeyValueAdapterResolver;
-import io.dapr.spring.data.DaprKeyValueTemplate;
-import io.dapr.spring.data.KeyValueAdapterResolver;
 import io.dapr.spring.data.repository.config.EnableDaprRepositories;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -42,9 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(
-    classes = {DaprClientAutoConfiguration.class, DaprKeyValueRepositoryIT.Config.class}
-)
+@ContextConfiguration(classes = TestDaprSpringDataConfiguration.class)
 public class DaprKeyValueRepositoryIT extends AbstractPostgreSQLBaseIT {
 
   @Autowired
@@ -96,26 +89,6 @@ public class DaprKeyValueRepositoryIT extends AbstractPostgreSQLBaseIT {
     List<TestType> byContent = repository.findByContent("test2");
 
     assertEquals(1, byContent.size());
-  }
-
-  @Configuration
-  @EnableDaprRepositories
-  static class Config {
-
-    @Bean
-    public ObjectMapper mapper() {
-      return new ObjectMapper();
-    }
-
-    @Bean
-    public KeyValueAdapterResolver keyValueAdapterResolver(DaprClient daprClient, ObjectMapper mapper) {
-      return new DaprKeyValueAdapterResolver(daprClient, mapper, STATE_STORE_NAME, BINDING_NAME);
-    }
-
-    @Bean
-    public DaprKeyValueTemplate daprKeyValueTemplate(KeyValueAdapterResolver keyValueAdapterResolver) {
-      return new DaprKeyValueTemplate(keyValueAdapterResolver);
-    }
   }
 
 }

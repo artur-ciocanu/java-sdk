@@ -29,6 +29,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static io.dapr.it.spring.data.DaprSpringDataConstants.BINDING_NAME;
+import static io.dapr.it.spring.data.DaprSpringDataConstants.STATE_STORE_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

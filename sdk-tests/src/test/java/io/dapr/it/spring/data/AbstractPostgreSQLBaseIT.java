@@ -17,20 +17,29 @@ import io.dapr.testcontainers.Component;
 import io.dapr.testcontainers.DaprContainer;
 import io.dapr.testcontainers.DaprLogLevel;
 import org.junit.jupiter.api.BeforeAll;
+import org.testcontainers.containers.Network;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.dapr.it.spring.data.DaprSpringDataConstants.BINDING_NAME;
+import static io.dapr.it.spring.data.DaprSpringDataConstants.PUBSUB_NAME;
+import static io.dapr.it.spring.data.DaprSpringDataConstants.STATE_STORE_NAME;
+
 @SuppressWarnings("AbbreviationAsWordInName")
-public abstract class AbstractPostgreSQLBaseIT extends AbstractDaprSpringDataBaseIT {
+@Testcontainers
+public abstract class AbstractPostgreSQLBaseIT {
   private static final String CONNECTION_STRING =
       "host=postgres user=postgres password=password port=5432 connect_timeout=10 database=dapr_db";
   private static final Map<String, String> STATE_STORE_PROPERTIES = createStateStoreProperties();
 
   private static final Map<String, String> BINDING_PROPERTIES = Collections.singletonMap("connectionString", CONNECTION_STRING);
+
+  private static final Network DAPR_NETWORK = Network.newNetwork();
 
   @Container
   private static final PostgreSQLContainer<?> POSTGRE_SQL_CONTAINER = new PostgreSQLContainer<>("postgres:16-alpine")

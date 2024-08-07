@@ -11,15 +11,10 @@
 limitations under the License.
 */
 
-package io.dapr.it.spring.data;
+package io.dapr.it.spring.messaging;
 
-import org.testcontainers.containers.Network;
-import org.testcontainers.junit.jupiter.Testcontainers;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@Testcontainers
-public abstract class AbstractDaprSpringDataBaseIT {
-  public static final Network DAPR_NETWORK = Network.newNetwork();
-  public static final String STATE_STORE_NAME = "kvstore";
-  public static final String BINDING_NAME = "kvbinding";
-  public static final String PUBSUB_NAME = "pubsub";
+@SpringBootApplication
+public class TestApplication {
 }

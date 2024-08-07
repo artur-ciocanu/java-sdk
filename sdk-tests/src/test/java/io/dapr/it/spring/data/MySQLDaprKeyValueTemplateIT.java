@@ -26,11 +26,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.containers.output.Slf4jLogConsumer;
+import org.testcontainers.containers.Network;
 import org.testcontainers.junit.jupiter.Container;
 
 import java.util.ArrayList;
@@ -40,6 +38,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static io.dapr.it.spring.data.DaprSpringDataConstants.STATE_STORE_NAME;
+import static io.dapr.it.spring.data.DaprSpringDataConstants.BINDING_NAME;
+import static io.dapr.it.spring.data.DaprSpringDataConstants.PUBSUB_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -47,14 +48,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * Integration tests for {@link MySQLDaprKeyValueTemplateIT}.
  */
 @SuppressWarnings("AbbreviationAsWordInName")
-public class MySQLDaprKeyValueTemplateIT extends AbstractDaprSpringDataBaseIT {
-  private static final Logger LOGGER = LoggerFactory.getLogger(MySQLDaprKeyValueTemplateIT.class);
-
+public class MySQLDaprKeyValueTemplateIT {
   private static final String STATE_STORE_DSN = "mysql:password@tcp(mysql:3306)/";
   private static final String BINDING_DSN = "mysql:password@tcp(mysql:3306)/dapr_db";
   private static final Map<String, String> STATE_STORE_PROPERTIES = createStateStoreProperties();
 
   private static final Map<String, String> BINDING_PROPERTIES = Collections.singletonMap("url", BINDING_DSN);
+
+  private static final Network DAPR_NETWORK = Network.newNetwork();
 
   @Container
   private static final MySQLContainer<?> MY_SQL_CONTAINER = new MySQLContainer<>("mysql:5.7.34")
