@@ -23,6 +23,7 @@ import io.dapr.testcontainers.DaprLogLevel;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import uk.org.webcompere.systemstubs.environment.EnvironmentVariables;
 import uk.org.webcompere.systemstubs.jupiter.SystemStub;
+import uk.org.webcompere.systemstubs.jupiter.SystemStubsExtension;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -50,6 +52,7 @@ import static org.assertj.core.api.Assertions.assertThat;
     properties = {"dapr.pubsub.name=pubsub"}
 )
 @Testcontainers
+@ExtendWith(SystemStubsExtension.class)
 public class DaprSpringMessagingIT {
 
   private static final Logger logger = LoggerFactory.getLogger(DaprSpringMessagingIT.class);

@@ -26,6 +26,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.containers.Network;
@@ -33,6 +34,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import uk.org.webcompere.systemstubs.environment.EnvironmentVariables;
 import uk.org.webcompere.systemstubs.jupiter.SystemStub;
+import uk.org.webcompere.systemstubs.jupiter.SystemStubsExtension;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,6 +54,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 @SuppressWarnings("AbbreviationAsWordInName")
 @Testcontainers
+@ExtendWith(SystemStubsExtension.class)
 public class MySQLDaprKeyValueTemplateIT {
   private static final String STATE_STORE_DSN = "mysql:password@tcp(mysql:3306)/";
   private static final String BINDING_DSN = "mysql:password@tcp(mysql:3306)/dapr_db";
