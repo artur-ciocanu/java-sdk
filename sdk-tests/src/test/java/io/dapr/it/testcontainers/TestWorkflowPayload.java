@@ -11,7 +11,7 @@
 limitations under the License.
 */
 
-package io.dapr.it.spring.boot.testcontainers;
+package io.dapr.it.testcontainers;
 
 import java.util.List;
 

@@ -11,15 +11,23 @@
 limitations under the License.
 */
 
-package io.dapr.it.spring.data;
+package io.dapr.it.testcontainers;
 
-import org.testcontainers.containers.Network;
-import org.testcontainers.junit.jupiter.Testcontainers;
+import io.dapr.testcontainers.DaprModule;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.testcontainers.context.ImportTestcontainers;
 
-@Testcontainers
-public abstract class AbstractDaprSpringDataBaseIT {
-  public static final Network DAPR_NETWORK = Network.newNetwork();
-  public static final String STATE_STORE_NAME = "kvstore";
-  public static final String BINDING_NAME = "kvbinding";
-  public static final String PUBSUB_NAME = "pubsub";
+@SpringBootApplication
+public class MyTestWithWorkflowsApplication {
+
+  public static void main(String[] args) {
+    SpringApplication.run(MyTestWithWorkflowsApplication.class, args);
+  }
+
+  @ImportTestcontainers(DaprModule.class)
+  static class DaprTestConfiguration {
+
+  }
+
 }

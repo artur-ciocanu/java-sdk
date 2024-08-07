@@ -179,6 +179,12 @@
     </dependency>
     <dependency>
       <groupId>io.dapr.spring</groupId>
+      <artifactId>dapr-spring-boot-starter</artifactId>
+      <version>${dapr.alpha.sdk.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.dapr.spring</groupId>
       <artifactId>dapr-spring-boot-testcontainers</artifactId>
       <version>${dapr.alpha.sdk.version}</version>
       <scope>test</scope>

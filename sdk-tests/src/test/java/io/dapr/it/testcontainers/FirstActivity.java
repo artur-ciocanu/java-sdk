@@ -11,11 +11,18 @@
 limitations under the License.
 */
 
-package io.dapr.it.spring.boot.autoconfigure.pubsub;
+package io.dapr.it.testcontainers;
 
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import io.dapr.workflows.runtime.WorkflowActivity;
+import io.dapr.workflows.runtime.WorkflowActivityContext;
 
-@Repository
-public interface TestTypeRepository extends CrudRepository<TestType, Integer> {
+public class FirstActivity implements WorkflowActivity {
+
+  @Override
+  public Object run(WorkflowActivityContext ctx) {
+    TestWorkflowPayload workflowPayload = ctx.getInput(TestWorkflowPayload.class);
+    workflowPayload.getPayloads().add("First Activity");
+    return workflowPayload;
+  }
+
 }

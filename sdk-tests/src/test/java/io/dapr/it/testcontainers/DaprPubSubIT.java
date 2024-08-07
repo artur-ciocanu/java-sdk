@@ -11,13 +11,11 @@
 limitations under the License.
 */
 
-package io.dapr.it.spring.boot.autoconfigure.pubsub;
+package io.dapr.it.testcontainers;
 
 import io.dapr.client.DaprClient;
 import io.dapr.client.domain.CloudEvent;
-import io.dapr.it.spring.boot.autoconfigure.AbstractDaprSpringBootAutoconfigureBaseIT;
-import io.dapr.spring.boot.autoconfigure.client.DaprClientAutoConfiguration;
-import io.dapr.spring.boot.autoconfigure.pubsub.DaprPubSubAutoConfiguration;
+import io.dapr.it.testcontainers.AbstractDaprSpringBoootBaseIT;
 import io.dapr.spring.messaging.DaprMessagingTemplate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,20 +30,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
-    classes = {
-        TestApplication.class,
-        TestRestController.class,
-        TestTypeRepository.class,
-        DaprClientAutoConfiguration.class,
-        DaprPubSubAutoConfiguration.class,
-    },
+    classes = TestApplication.class,
     properties = {"dapr.pubsub.name=pubsub"}
 )
-public class DaprPubSubAutoConfigurationIT extends AbstractDaprSpringBootAutoconfigureBaseIT {
+public class DaprPubSubIT extends AbstractDaprSpringBoootBaseIT {
 
-  private static final Logger logger = LoggerFactory.getLogger(DaprPubSubAutoConfigurationIT.class);
+  private static final Logger logger = LoggerFactory.getLogger(DaprPubSubIT.class);
 
   private static final String TOPIC = "mockTopic";
+
 
   @Autowired
   private DaprClient daprClient;

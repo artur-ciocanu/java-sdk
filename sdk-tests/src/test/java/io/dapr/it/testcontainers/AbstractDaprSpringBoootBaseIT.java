@@ -11,23 +11,20 @@
 limitations under the License.
 */
 
-package io.dapr.it.spring.boot.autoconfigure;
+package io.dapr.it.testcontainers;
 
 import io.dapr.testcontainers.Component;
 import io.dapr.testcontainers.DaprContainer;
 import io.dapr.testcontainers.DaprLogLevel;
 import org.junit.jupiter.api.BeforeAll;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.Network;
-import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.Collections;
 
 @Testcontainers
-public abstract class AbstractDaprSpringBootAutoconfigureBaseIT {
+public abstract class AbstractDaprSpringBoootBaseIT {
 
   public static Network DAPR_NETWORK = Network.newNetwork();
 
@@ -45,8 +42,6 @@ public abstract class AbstractDaprSpringBootAutoconfigureBaseIT {
   static void beforeAll() {
     org.testcontainers.Testcontainers.exposeHostPorts(8080);
 
-    System.setProperty("dapr.grpc.port", Integer.toString(DAPR_CONTAINER.getGrpcPort()));
-    System.setProperty("dapr.http.port", Integer.toString(DAPR_CONTAINER.getHttpPort()));
   }
 
 }

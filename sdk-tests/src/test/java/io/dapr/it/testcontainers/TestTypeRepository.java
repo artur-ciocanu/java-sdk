@@ -11,15 +11,11 @@
 limitations under the License.
 */
 
-package io.dapr.it.spring.data.repository;
+package io.dapr.it.testcontainers;
 
-import io.dapr.it.spring.data.TestType;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public interface TestTypeRepository extends CrudRepository<TestType, Integer> {
-  List<TestType> findByContent(String content);
 }

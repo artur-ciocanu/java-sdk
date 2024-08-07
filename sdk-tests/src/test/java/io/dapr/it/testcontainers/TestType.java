@@ -11,23 +11,9 @@
 limitations under the License.
 */
 
-package io.dapr.it.spring.boot.testcontainers;
+package io.dapr.it.testcontainers;
 
-import io.dapr.testcontainers.DaprModule;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.testcontainers.context.ImportTestcontainers;
+import org.springframework.data.annotation.Id;
 
-@SpringBootApplication
-public class MyTestWithWorkflowsApplication {
-
-  public static void main(String[] args) {
-    SpringApplication.run(MyTestWithWorkflowsApplication.class, args);
-  }
-
-  @ImportTestcontainers(DaprModule.class)
-  static class DaprTestConfiguration {
-
-  }
-
+public record TestType(@Id Integer id, String content) {
 }
