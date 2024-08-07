@@ -39,9 +39,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
     classes = {
-        TestRestController.class,
-        TestDaprSpringMessagingConfiguration.class,
         DaprClientAutoConfiguration.class,
+        TestApplication.class
     },
     properties = {"dapr.pubsub.name=pubsub"}
 )
