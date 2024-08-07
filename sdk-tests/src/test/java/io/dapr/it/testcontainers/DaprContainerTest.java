@@ -60,12 +60,12 @@ public class DaprContainerTest {
   private static final String PUBSUB_TOPIC_NAME = "topic";
 
   @RegisterExtension
-  public static WireMockExtension wireMockExtension = WireMockExtension.newInstance()
+  private static final WireMockExtension WIRE_MOCK_EXTENSION = WireMockExtension.newInstance()
       .options(wireMockConfig().port(8081))
       .build();
 
   @Container
-  public static DaprContainer daprContainer = new DaprContainer("daprio/daprd")
+  private static final DaprContainer DAPR_CONTAINER = new DaprContainer("daprio/daprd")
       .withAppName("dapr-app")
       .withAppPort(8081)
       .withAppChannelAddress("host.testcontainers.internal");
@@ -77,8 +77,6 @@ public class DaprContainerTest {
   public static void setDaprProperties() {
     configStub();
     org.testcontainers.Testcontainers.exposeHostPorts(8081);
-    System.setProperty("dapr.grpc.port", Integer.toString(daprContainer.getGrpcPort()));
-    System.setProperty("dapr.http.port", Integer.toString(daprContainer.getHttpPort()));
   }
 
   private static void configStub() {
@@ -102,12 +100,12 @@ public class DaprContainerTest {
   @Test
   public void testDaprContainerDefaults() {
     assertEquals(2,
-        daprContainer.getComponents().size(),
+        DAPR_CONTAINER.getComponents().size(),
         "The pubsub and kvstore component should be configured by default"
         );
     assertEquals(
         1,
-        daprContainer.getSubscriptions().size(),
+        DAPR_CONTAINER.getSubscriptions().size(),
         "A subscription should be configured by default if none is provided"
         );
   }
@@ -137,11 +135,11 @@ public class DaprContainerTest {
 
     OkHttpClient client = new OkHttpClient.Builder().build();
 
-    String url = "http://" + daprContainer.getHost() + ":" + daprContainer.getMappedPort(3500);
+    String url = "http://" + DAPR_CONTAINER.getHost() + ":" + DAPR_CONTAINER.getMappedPort(3500);
     Request request = new Request.Builder().url(url + "/v1.0/metadata").build();
 
     try (Response response = client.newCall(request).execute()) {
-      if (response.isSuccessful()) {
+      if (response.isSuccessful() && response.body() != null) {
         assertTrue(response.body().string().contains("placement: connected"));
 
       } else {
