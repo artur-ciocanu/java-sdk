@@ -11,9 +11,8 @@
 limitations under the License.
 */
 
-package io.dapr.it.spring.data.repository;
+package io.dapr.it.spring.data;
 
-import io.dapr.it.spring.data.TestType;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

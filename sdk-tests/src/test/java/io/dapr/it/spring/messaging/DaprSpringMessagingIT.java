@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.testcontainers.containers.Network;
 import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import uk.org.webcompere.systemstubs.environment.EnvironmentVariables;
 import uk.org.webcompere.systemstubs.jupiter.SystemStub;
 
@@ -48,6 +49,7 @@ import static org.assertj.core.api.Assertions.assertThat;
     },
     properties = {"dapr.pubsub.name=pubsub"}
 )
+@Testcontainers
 public class DaprSpringMessagingIT {
 
   private static final Logger logger = LoggerFactory.getLogger(DaprSpringMessagingIT.class);

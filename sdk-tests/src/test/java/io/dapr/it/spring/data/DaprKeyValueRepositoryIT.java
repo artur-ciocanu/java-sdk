@@ -11,11 +11,9 @@
 limitations under the License.
 */
 
-package io.dapr.it.spring.data.repository;
+package io.dapr.it.spring.data;
 
 import io.dapr.client.DaprClient;
-import io.dapr.it.spring.data.AbstractPostgreSQLBaseIT;
-import io.dapr.it.spring.data.TestType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

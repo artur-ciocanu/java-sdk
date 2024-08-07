@@ -30,6 +30,7 @@ import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import uk.org.webcompere.systemstubs.environment.EnvironmentVariables;
 import uk.org.webcompere.systemstubs.jupiter.SystemStub;
 
@@ -50,6 +51,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * Integration tests for {@link MySQLDaprKeyValueTemplateIT}.
  */
 @SuppressWarnings("AbbreviationAsWordInName")
+@Testcontainers
 public class MySQLDaprKeyValueTemplateIT {
   private static final String STATE_STORE_DSN = "mysql:password@tcp(mysql:3306)/";
   private static final String BINDING_DSN = "mysql:password@tcp(mysql:3306)/dapr_db";

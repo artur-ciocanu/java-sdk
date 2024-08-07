@@ -1,8 +1,7 @@
-package io.dapr.it.spring.data.repository;
+package io.dapr.it.spring.data;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dapr.client.DaprClient;
-import io.dapr.it.spring.data.DaprSpringDataConstants;
 import io.dapr.spring.boot.autoconfigure.client.DaprClientAutoConfiguration;
 import io.dapr.spring.data.DaprKeyValueAdapterResolver;
 import io.dapr.spring.data.DaprKeyValueTemplate;
