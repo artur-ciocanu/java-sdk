@@ -39,20 +39,12 @@ public class DaprPubSubIT extends AbstractDaprSpringBoootBaseIT {
 
   private static final String TOPIC = "mockTopic";
 
-
-  @Autowired
-  private DaprClient daprClient;
-
   @Autowired
   private DaprMessagingTemplate<String> messagingTemplate;
 
   @Autowired
   private TestRestController testRestController;
 
-  @BeforeEach
-  public void setUp() {
-    daprClient.waitForSidecar(10000).block();
-  }
 
   @Test
   public void testDaprMessagingTemplate() throws InterruptedException {
