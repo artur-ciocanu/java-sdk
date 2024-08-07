@@ -16,21 +16,16 @@ package io.dapr.it.spring.data.repository;
 import io.dapr.client.DaprClient;
 import io.dapr.it.spring.data.AbstractPostgreSQLBaseIT;
 import io.dapr.it.spring.data.TestType;
-import io.dapr.spring.boot.autoconfigure.client.DaprClientAutoConfiguration;
-import io.dapr.spring.data.repository.config.EnableDaprRepositories;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Integration tests for {@link DaprKeyValueRepositoryIT}.

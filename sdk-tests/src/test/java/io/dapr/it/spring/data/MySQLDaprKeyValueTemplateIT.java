@@ -30,6 +30,8 @@ import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.junit.jupiter.Container;
+import uk.org.webcompere.systemstubs.environment.EnvironmentVariables;
+import uk.org.webcompere.systemstubs.jupiter.SystemStub;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -79,6 +81,9 @@ public class MySQLDaprKeyValueTemplateIT {
       .withLogConsumer(outputFrame -> System.out.println(outputFrame.getUtf8String()))
       .dependsOn(MY_SQL_CONTAINER);
 
+  @SystemStub
+  private static EnvironmentVariables environmentVariables;
+
   private final ObjectMapper mapper = new ObjectMapper();
 
   private DaprClient daprClient;
@@ -88,8 +93,12 @@ public class MySQLDaprKeyValueTemplateIT {
   static void beforeAll() {
     org.testcontainers.Testcontainers.exposeHostPorts(8080);
 
-    System.setProperty("dapr.grpc.port", Integer.toString(DAPR_CONTAINER.getGrpcPort()));
-    System.setProperty("dapr.http.port", Integer.toString(DAPR_CONTAINER.getHttpPort()));
+    Map<String, String> properties = new HashMap<>();
+
+    properties.put("DAPR_GRPC_PORT", Integer.toString(DAPR_CONTAINER.getGrpcPort()));
+    properties.put("DAPR_HTTP_PORT", Integer.toString(DAPR_CONTAINER.getHttpPort()));
+
+    environmentVariables.set(properties);
   }
 
   @BeforeEach

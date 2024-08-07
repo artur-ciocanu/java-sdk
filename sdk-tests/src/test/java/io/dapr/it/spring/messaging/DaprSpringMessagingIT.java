@@ -29,16 +29,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.testcontainers.containers.Network;
 import org.testcontainers.junit.jupiter.Container;
+import uk.org.webcompere.systemstubs.environment.EnvironmentVariables;
+import uk.org.webcompere.systemstubs.jupiter.SystemStub;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
     classes = {
-        TestApplication.class,
         TestRestController.class,
         TestDaprSpringMessagingConfiguration.class,
         DaprClientAutoConfiguration.class,
@@ -51,10 +54,10 @@ public class DaprSpringMessagingIT {
 
   private static final String TOPIC = "mockTopic";
 
-  public static Network DAPR_NETWORK = Network.newNetwork();
+  private static final Network DAPR_NETWORK = Network.newNetwork();
 
   @Container
-  private final static DaprContainer DAPR_CONTAINER = new DaprContainer("daprio/daprd:1.13.2")
+  private static final DaprContainer DAPR_CONTAINER = new DaprContainer("daprio/daprd:1.13.2")
       .withAppName("local-dapr-app")
       .withNetwork(DAPR_NETWORK)
       .withComponent(new Component("pubsub", "pubsub.in-memory", "v1", Collections.emptyMap()))
@@ -62,6 +65,9 @@ public class DaprSpringMessagingIT {
       .withDaprLogLevel(DaprLogLevel.DEBUG)
       .withLogConsumer(outputFrame -> System.out.println(outputFrame.getUtf8String()))
       .withAppChannelAddress("host.testcontainers.internal");
+
+  @SystemStub
+  private static EnvironmentVariables environmentVariables;
 
   @Autowired
   private DaprClient daprClient;
@@ -76,12 +82,23 @@ public class DaprSpringMessagingIT {
   static void beforeAll() {
     org.testcontainers.Testcontainers.exposeHostPorts(8080);
 
-    System.setProperty("dapr.grpc.port", Integer.toString(DAPR_CONTAINER.getGrpcPort()));
-    System.setProperty("dapr.http.port", Integer.toString(DAPR_CONTAINER.getHttpPort()));
+    Map<String, String> properties = new HashMap<>();
+
+    properties.put("DAPR_GRPC_PORT", Integer.toString(DAPR_CONTAINER.getGrpcPort()));
+    properties.put("DAPR_HTTP_PORT", Integer.toString(DAPR_CONTAINER.getHttpPort()));
+
+    environmentVariables.set(properties);
   }
 
   @BeforeEach
   public void setUp() {
+    Map<String, String> properties = new HashMap<>();
+
+    properties.put("DAPR_GRPC_PORT", Integer.toString(DAPR_CONTAINER.getGrpcPort()));
+    properties.put("DAPR_HTTP_PORT", Integer.toString(DAPR_CONTAINER.getHttpPort()));
+
+    environmentVariables.set(properties);
+
     daprClient.waitForSidecar(10000).block();
   }
 
@@ -89,7 +106,9 @@ public class DaprSpringMessagingIT {
   public void testDaprMessagingTemplate() throws InterruptedException {
     for (int i = 0; i < 10; i++) {
       var msg = "ProduceAndReadWithPrimitiveMessageType:" + i;
+
       messagingTemplate.send(TOPIC, msg);
+
       logger.info("++++++PRODUCE {}------", msg);
     }
 
@@ -97,6 +116,7 @@ public class DaprSpringMessagingIT {
     Thread.sleep(1000);
 
     List<CloudEvent<String>> events = testRestController.getEvents();
+
     assertThat(events.size()).isEqualTo(10);
   }
 

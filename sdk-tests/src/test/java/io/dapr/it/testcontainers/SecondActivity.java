@@ -11,17 +11,17 @@
 limitations under the License.
 */
 
-package io.dapr.it.spring.boot.testcontainers;
+package io.dapr.it.testcontainers;
 
 import io.dapr.workflows.runtime.WorkflowActivity;
 import io.dapr.workflows.runtime.WorkflowActivityContext;
 
-public class FirstActivity implements WorkflowActivity {
+public class SecondActivity implements WorkflowActivity {
 
   @Override
   public Object run(WorkflowActivityContext ctx) {
     TestWorkflowPayload workflowPayload = ctx.getInput(TestWorkflowPayload.class);
-    workflowPayload.getPayloads().add("First Activity");
+    workflowPayload.getPayloads().add("Second Activity");
     return workflowPayload;
   }
 

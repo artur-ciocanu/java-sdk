@@ -21,6 +21,8 @@ import org.testcontainers.containers.Network;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import uk.org.webcompere.systemstubs.environment.EnvironmentVariables;
+import uk.org.webcompere.systemstubs.jupiter.SystemStub;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -41,6 +43,9 @@ public abstract class AbstractPostgreSQLBaseIT {
 
   private static final Network DAPR_NETWORK = Network.newNetwork();
 
+  @SystemStub
+  private static EnvironmentVariables environmentVariables;
+
   @Container
   private static final PostgreSQLContainer<?> POSTGRE_SQL_CONTAINER = new PostgreSQLContainer<>("postgres:16-alpine")
       .withNetworkAliases("postgres")
@@ -51,7 +56,7 @@ public abstract class AbstractPostgreSQLBaseIT {
       .withNetwork(DAPR_NETWORK);
 
   @Container
-  private static final DaprContainer DAPR_CONTAINER = new DaprContainer("daprio/daprd:1.13.2")
+  public static final DaprContainer DAPR_CONTAINER = new DaprContainer("daprio/daprd:1.13.2")
       .withAppName("local-dapr-app")
       .withNetwork(DAPR_NETWORK)
       .withComponent(new Component(STATE_STORE_NAME, "state.postgresql", "v1", STATE_STORE_PROPERTIES))
@@ -67,8 +72,12 @@ public abstract class AbstractPostgreSQLBaseIT {
   static void beforeAll() {
     org.testcontainers.Testcontainers.exposeHostPorts(8080);
 
-    System.setProperty("dapr.grpc.port", Integer.toString(DAPR_CONTAINER.getGrpcPort()));
-    System.setProperty("dapr.http.port", Integer.toString(DAPR_CONTAINER.getHttpPort()));
+    Map<String, String> properties = new HashMap<>();
+
+    properties.put("DAPR_GRPC_PORT", Integer.toString(DAPR_CONTAINER.getGrpcPort()));
+    properties.put("DAPR_HTTP_PORT", Integer.toString(DAPR_CONTAINER.getHttpPort()));
+
+    environmentVariables.set(properties);
   }
 
   private static Map<String, String> createStateStoreProperties() {
