@@ -105,6 +105,7 @@ Try the following examples to learn more about Dapr's Java SDK:
 * [Binding with input over Http](./examples/src/main/java/io/dapr/examples/bindings/http)
 * [Actors](./examples/src/main/java/io/dapr/examples/actors/)
 * [Secrets management](./examples/src/main/java/io/dapr/examples/secrets)
+* [Configuration](./examples/src/main/java/io/dapr/examples/configuration)
 * [Distributed tracing with OpenTelemetry SDK](./examples/src/main/java/io/dapr/examples/tracing)
 * [Exception handling](./examples/src/main/java/io/dapr/examples/exception)
 * [Unit testing](./examples/src/main/java/io/dapr/examples/unittesting)
@@ -236,13 +237,13 @@ Similarly, all of these need to be run for running the ITs either individually o
 Run the following commands from the root of the repo to start all the docker containers that the tests depend on.
 
 ```bash
-docker-compose -f ./sdk-tests/deploy/local-test.yml up -d
+docker compose -f ./sdk-tests/deploy/local-test.yml up -d
 ```
 
 To stop the containers and services, run the following commands.
 
 ```bash
-docker-compose -f ./sdk-tests/deploy/local-test.yml down
+docker compose -f ./sdk-tests/deploy/local-test.yml down
 ```
 
 
