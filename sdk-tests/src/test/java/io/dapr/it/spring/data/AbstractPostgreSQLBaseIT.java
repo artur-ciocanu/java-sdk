@@ -75,7 +75,7 @@ public abstract class AbstractPostgreSQLBaseIT {
   static void beforeAll() {
     org.testcontainers.Testcontainers.exposeHostPorts(8080);
 
-    Map<String, String> properties = new HashMap<>();
+    Map<Object, Object> properties = new HashMap<>();
 
     properties.put("DAPR_GRPC_PORT", Integer.toString(DAPR_CONTAINER.getGrpcPort()));
     properties.put("DAPR_HTTP_PORT", Integer.toString(DAPR_CONTAINER.getHttpPort()));
