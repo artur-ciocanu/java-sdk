@@ -83,9 +83,7 @@ public class MySQLDaprKeyValueTemplateIT {
       .withComponent(new Component(STATE_STORE_NAME, "state.mysql", "v1", STATE_STORE_PROPERTIES))
       .withComponent(new Component(BINDING_NAME, "bindings.mysql", "v1", BINDING_PROPERTIES))
       .withComponent(new Component(PUBSUB_NAME, "pubsub.in-memory", "v1", Collections.emptyMap()))
-      .withAppPort(8080)
       .withDaprLogLevel(DaprLogLevel.DEBUG)
-      .withAppChannelAddress("host.testcontainers.internal")
       .withLogConsumer(outputFrame -> System.out.println(outputFrame.getUtf8String()))
       .dependsOn(MY_SQL_CONTAINER);
 
@@ -104,11 +102,6 @@ public class MySQLDaprKeyValueTemplateIT {
   @Autowired
   private DaprKeyValueTemplate keyValueTemplate;
 
-  @BeforeAll
-  static void beforeAll() {
-    org.testcontainers.Testcontainers.exposeHostPorts(8080);
-  }
-
 
   private static Map<String, String> createStateStoreProperties() {
     Map<String, String> result = new HashMap<>();
@@ -119,6 +112,11 @@ public class MySQLDaprKeyValueTemplateIT {
     result.put("connectionString", STATE_STORE_DSN);
 
     return result;
+  }
+
+  @BeforeEach
+  public void waitSetup() {
+    daprClient.waitForSidecar(10000).block();
   }
 
   /**

@@ -55,6 +55,10 @@ public class PostgreSQLDaprKeyValueTemplateIT extends AbstractPostgreSQLBaseIT {
   @Autowired
   private DaprKeyValueTemplate keyValueTemplate;
 
+  @BeforeEach
+  public void waitSetup() {
+    daprClient.waitForSidecar(1000).block();
+  }
 
   /**
    * Cleans up the state store after each test.
@@ -62,7 +66,6 @@ public class PostgreSQLDaprKeyValueTemplateIT extends AbstractPostgreSQLBaseIT {
   @AfterEach
   public void tearDown() {
     var meta = Collections.singletonMap("sql", "delete from state");
-
     daprClient.invokeBinding(BINDING_NAME, "exec", null, meta).block();
   }
 
