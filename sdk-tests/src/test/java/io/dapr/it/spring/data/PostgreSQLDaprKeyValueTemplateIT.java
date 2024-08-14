@@ -19,10 +19,17 @@ import io.dapr.client.DaprClientBuilder;
 import io.dapr.spring.data.DaprKeyValueAdapterResolver;
 import io.dapr.spring.data.DaprKeyValueTemplate;
 import io.dapr.spring.data.KeyValueAdapterResolver;
+import io.dapr.testcontainers.TestcontainersDaprClientCustomizer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,26 +45,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * Integration tests for {@link PostgreSQLDaprKeyValueTemplateIT}.
  */
 @SuppressWarnings("AbbreviationAsWordInName")
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = TestDaprSpringDataConfiguration.class)
 public class PostgreSQLDaprKeyValueTemplateIT extends AbstractPostgreSQLBaseIT {
 
-  private final ObjectMapper mapper = new ObjectMapper();
-
+  @Autowired
   private DaprClient daprClient;
+
+  @Autowired
   private DaprKeyValueTemplate keyValueTemplate;
 
-  @BeforeEach
-  public void setUp() {
-    daprClient = new DaprClientBuilder().build();
-    KeyValueAdapterResolver daprKeyValueAdapterResolver = new DaprKeyValueAdapterResolver(
-        daprClient,
-        mapper,
-        STATE_STORE_NAME,
-        BINDING_NAME
-    );
-    keyValueTemplate = new DaprKeyValueTemplate(daprKeyValueAdapterResolver);
-
-    daprClient.waitForSidecar(10000).block();
-  }
 
   /**
    * Cleans up the state store after each test.

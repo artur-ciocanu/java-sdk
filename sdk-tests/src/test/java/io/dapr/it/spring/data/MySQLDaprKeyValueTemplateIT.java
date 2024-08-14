@@ -26,7 +26,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.junit.jupiter.Container;
@@ -50,6 +56,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 @SuppressWarnings("AbbreviationAsWordInName")
 @Testcontainers
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = TestDaprSpringDataConfiguration.class)
 public class MySQLDaprKeyValueTemplateIT {
   private static final String STATE_STORE_DSN = "mysql:password@tcp(mysql:3306)/";
   private static final String BINDING_DSN = "mysql:password@tcp(mysql:3306)/dapr_db";
@@ -81,9 +89,19 @@ public class MySQLDaprKeyValueTemplateIT {
       .withLogConsumer(outputFrame -> System.out.println(outputFrame.getUtf8String()))
       .dependsOn(MY_SQL_CONTAINER);
 
-  private final ObjectMapper mapper = new ObjectMapper();
 
+  @DynamicPropertySource
+  static void daprProperties(DynamicPropertyRegistry registry) {
+    org.testcontainers.Testcontainers.exposeHostPorts(8080);
+    DAPR_CONTAINER.start();
+    registry.add("dapr.grpc.port", DAPR_CONTAINER::getGrpcPort);
+    registry.add("dapr.http.port", DAPR_CONTAINER::getHttpPort);
+  }
+
+  @Autowired
   private DaprClient daprClient;
+
+  @Autowired
   private DaprKeyValueTemplate keyValueTemplate;
 
   @BeforeAll
@@ -91,19 +109,6 @@ public class MySQLDaprKeyValueTemplateIT {
     org.testcontainers.Testcontainers.exposeHostPorts(8080);
   }
 
-  @BeforeEach
-  public void setUp() {
-    daprClient = new DaprClientBuilder().build();
-    KeyValueAdapterResolver daprKeyValueResolver = new DaprKeyValueAdapterResolver(
-        daprClient,
-        mapper,
-        STATE_STORE_NAME,
-        BINDING_NAME
-    );
-    keyValueTemplate = new DaprKeyValueTemplate(daprKeyValueResolver);
-
-    daprClient.waitForSidecar(10000).block();
-  }
 
   private static Map<String, String> createStateStoreProperties() {
     Map<String, String> result = new HashMap<>();

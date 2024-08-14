@@ -17,6 +17,8 @@ import io.dapr.testcontainers.Component;
 import io.dapr.testcontainers.DaprContainer;
 import io.dapr.testcontainers.DaprLogLevel;
 import org.junit.jupiter.api.BeforeAll;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -62,6 +64,14 @@ public abstract class AbstractPostgreSQLBaseIT {
       .withLogConsumer(outputFrame -> System.out.println(outputFrame.getUtf8String()))
       .withAppChannelAddress("host.testcontainers.internal")
       .dependsOn(POSTGRE_SQL_CONTAINER);
+
+  @DynamicPropertySource
+  static void daprProperties(DynamicPropertyRegistry registry) {
+    org.testcontainers.Testcontainers.exposeHostPorts(8080);
+    DAPR_CONTAINER.start();
+    registry.add("dapr.grpc.port", DAPR_CONTAINER::getGrpcPort);
+    registry.add("dapr.http.port", DAPR_CONTAINER::getHttpPort);
+  }
 
   @BeforeAll
   static void beforeAll() {

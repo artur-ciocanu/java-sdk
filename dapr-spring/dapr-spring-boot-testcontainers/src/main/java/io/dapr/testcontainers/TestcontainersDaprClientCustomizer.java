@@ -7,11 +7,13 @@ import org.springframework.beans.factory.annotation.Value;
 
 public class TestcontainersDaprClientCustomizer implements DaprClientCustomizer {
 
-  @Value("${dapr.http.port}")
   private String daprHttpPort;
-
-  @Value("${dapr.grpc.port}")
   private String daprGrpcPort;
+
+  public TestcontainersDaprClientCustomizer(String daprHttpPort, String daprGrpcPort) {
+    this.daprHttpPort = daprHttpPort;
+    this.daprGrpcPort = daprGrpcPort;
+  }
 
   @Override
   public void customize(DaprClientBuilder daprClientBuilder) {
