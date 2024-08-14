@@ -38,5 +38,11 @@
       <artifactId>testcontainers-dapr</artifactId>
       <version>${testcontainers-dapr.version}</version>
     </dependency>
+    <dependency>
+      <groupId>io.dapr.spring</groupId>
+      <artifactId>dapr-spring-core</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
 </project>

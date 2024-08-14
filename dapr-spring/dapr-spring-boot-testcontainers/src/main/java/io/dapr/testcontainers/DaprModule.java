@@ -42,8 +42,8 @@ public interface DaprModule {
   static void daprProperties(DynamicPropertyRegistry registry) {
     Testcontainers.exposeHostPorts(8080);
     dapr.start();
-    System.setProperty("dapr.grpc.port", Integer.toString(dapr.getGrpcPort()));
-    System.setProperty("dapr.http.port", Integer.toString(dapr.getHttpPort()));
+    registry.add("dapr.grpc.port", dapr::getGrpcPort);
+    registry.add("dapr.http.port", dapr::getHttpPort);
   }
 
 }

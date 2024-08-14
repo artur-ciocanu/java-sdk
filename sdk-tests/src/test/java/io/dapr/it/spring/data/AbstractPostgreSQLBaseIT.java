@@ -17,6 +17,8 @@ import io.dapr.testcontainers.Component;
 import io.dapr.testcontainers.DaprContainer;
 import io.dapr.testcontainers.DaprLogLevel;
 import org.junit.jupiter.api.BeforeAll;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -31,7 +33,6 @@ import static io.dapr.it.spring.data.DaprSpringDataConstants.PUBSUB_NAME;
 import static io.dapr.it.spring.data.DaprSpringDataConstants.STATE_STORE_NAME;
 
 @SuppressWarnings("AbbreviationAsWordInName")
-@Testcontainers
 public abstract class AbstractPostgreSQLBaseIT {
   private static final String CONNECTION_STRING =
       "host=postgres user=postgres password=password port=5432 connect_timeout=10 database=dapr_db";
@@ -57,16 +58,17 @@ public abstract class AbstractPostgreSQLBaseIT {
       .withComponent(new Component(STATE_STORE_NAME, "state.postgresql", "v1", STATE_STORE_PROPERTIES))
       .withComponent(new Component(BINDING_NAME, "bindings.postgresql", "v1", BINDING_PROPERTIES))
       .withComponent(new Component(PUBSUB_NAME, "pubsub.in-memory", "v1", Collections.emptyMap()))
-      .withAppPort(8080)
       .withDaprLogLevel(DaprLogLevel.DEBUG)
       .withLogConsumer(outputFrame -> System.out.println(outputFrame.getUtf8String()))
-      .withAppChannelAddress("host.testcontainers.internal")
       .dependsOn(POSTGRE_SQL_CONTAINER);
 
-  @BeforeAll
-  static void beforeAll() {
-    org.testcontainers.Testcontainers.exposeHostPorts(8080);
+  @DynamicPropertySource
+  static void daprProperties(DynamicPropertyRegistry registry) {
+    DAPR_CONTAINER.start();
+    registry.add("dapr.grpc.port", DAPR_CONTAINER::getGrpcPort);
+    registry.add("dapr.http.port", DAPR_CONTAINER::getHttpPort);
   }
+
 
   private static Map<String, String> createStateStoreProperties() {
     Map<String, String> result = new HashMap<>();

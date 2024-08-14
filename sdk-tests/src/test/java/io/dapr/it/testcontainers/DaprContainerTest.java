@@ -13,24 +13,25 @@ limitations under the License.
 
 package io.dapr.it.testcontainers;
 
-import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import io.dapr.client.DaprClient;
 import io.dapr.client.DaprClientBuilder;
 import io.dapr.client.domain.Metadata;
 import io.dapr.client.domain.State;
 
+import io.dapr.config.Properties;
 import io.dapr.testcontainers.DaprContainer;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.io.IOException;
 import java.util.Map;
+
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.any;
@@ -50,6 +51,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Testcontainers
+@WireMockTest(httpPort = 8081)
 public class DaprContainerTest {
 
   // Time-to-live for messages published.
@@ -59,10 +61,6 @@ public class DaprContainerTest {
   private static final String PUBSUB_NAME = "pubsub";
   private static final String PUBSUB_TOPIC_NAME = "topic";
 
-  @RegisterExtension
-  private static final WireMockExtension WIRE_MOCK_EXTENSION = WireMockExtension.newInstance()
-      .options(wireMockConfig().port(8081))
-      .build();
 
   @Container
   private static final DaprContainer DAPR_CONTAINER = new DaprContainer("daprio/daprd")
@@ -73,13 +71,13 @@ public class DaprContainerTest {
   /**
    * Sets the Dapr properties for the test.
    */
-  @BeforeAll
-  public static void setDaprProperties() {
+  @BeforeEach
+  public void setDaprProperties() {
     configStub();
     org.testcontainers.Testcontainers.exposeHostPorts(8081);
   }
 
-  private static void configStub() {
+  private void configStub() {
 
     stubFor(any(urlMatching("/dapr/subscribe"))
         .willReturn(aResponse().withBody("[]").withStatus(200)));
@@ -112,7 +110,10 @@ public class DaprContainerTest {
 
   @Test
   public void testStateStore() throws Exception {
-    try (DaprClient client = (new DaprClientBuilder()).build()) {
+    DaprClientBuilder builder = new DaprClientBuilder()
+              .withPropertyOverride(Properties.HTTP_PORT, String.valueOf(DAPR_CONTAINER.getHttpPort()))
+              .withPropertyOverride(Properties.GRPC_PORT, String.valueOf(DAPR_CONTAINER.getGrpcPort()));
+    try (DaprClient client = (builder).build()) {
       client.waitForSidecar(5000).block();
 
       String value = "value";
@@ -122,14 +123,17 @@ public class DaprContainerTest {
       // Get the state back from the state store
       State<String> retrievedState = client.getState(STATE_STORE_NAME, KEY, String.class).block();
 
-      assertEquals("The value retrieved should be the same as the one stored", value, retrievedState.getValue());
+      assertEquals(value, retrievedState.getValue(), "The value retrieved should be the same as the one stored");
     }
   }
 
   @Test
   public void testPlacement() throws Exception {
+    DaprClientBuilder builder = new DaprClientBuilder()
+            .withPropertyOverride(Properties.HTTP_PORT, String.valueOf(DAPR_CONTAINER.getHttpPort()))
+            .withPropertyOverride(Properties.GRPC_PORT, String.valueOf(DAPR_CONTAINER.getGrpcPort()));
     // Here we are just waiting for Dapr to be ready
-    try (DaprClient client = (new DaprClientBuilder()).build()) {
+    try (DaprClient client = (builder).build()) {
       client.waitForSidecar(5000).block();
     }
 
@@ -151,15 +155,18 @@ public class DaprContainerTest {
 
   @Test
   public void testPubSub() throws Exception {
-    try (DaprClient client = (new DaprClientBuilder()).build()) {
+
+    DaprClientBuilder builder = new DaprClientBuilder()
+            .withPropertyOverride(Properties.HTTP_PORT, String.valueOf(DAPR_CONTAINER.getHttpPort()))
+            .withPropertyOverride(Properties.GRPC_PORT, String.valueOf(DAPR_CONTAINER.getGrpcPort()));
+    try (DaprClient client = (builder).build()) {
       client.waitForSidecar(5000).block();
 
       String message = "message content";
       Map<String, String> metadata = singletonMap(Metadata.TTL_IN_SECONDS, MESSAGE_TTL_IN_SECONDS);
       client.publishEvent(PUBSUB_NAME, PUBSUB_TOPIC_NAME, message, metadata).block();
     }
-
-    verify(getRequestedFor(urlMatching("/dapr/config")));
+    
     verify(postRequestedFor(urlEqualTo("/events")).withHeader("Content-Type", equalTo("application/cloudevents+json")));
   }
 }

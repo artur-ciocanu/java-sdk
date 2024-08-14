@@ -13,16 +13,17 @@ limitations under the License.
 
 package io.dapr.it.spring.data;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dapr.client.DaprClient;
-import io.dapr.client.DaprClientBuilder;
-import io.dapr.spring.data.DaprKeyValueAdapterResolver;
 import io.dapr.spring.data.DaprKeyValueTemplate;
-import io.dapr.spring.data.KeyValueAdapterResolver;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,36 +39,24 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * Integration tests for {@link PostgreSQLDaprKeyValueTemplateIT}.
  */
 @SuppressWarnings("AbbreviationAsWordInName")
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = TestDaprSpringDataConfiguration.class)
+@Testcontainers
 public class PostgreSQLDaprKeyValueTemplateIT extends AbstractPostgreSQLBaseIT {
 
-  private final ObjectMapper mapper = new ObjectMapper();
-
+  @Autowired
   private DaprClient daprClient;
+
+  @Autowired
   private DaprKeyValueTemplate keyValueTemplate;
 
   @BeforeEach
-  public void setUp() {
-    daprClient = new DaprClientBuilder().build();
-    KeyValueAdapterResolver daprKeyValueAdapterResolver = new DaprKeyValueAdapterResolver(
-        daprClient,
-        mapper,
-        STATE_STORE_NAME,
-        BINDING_NAME
-    );
-    keyValueTemplate = new DaprKeyValueTemplate(daprKeyValueAdapterResolver);
-
-    daprClient.waitForSidecar(10000).block();
-  }
-
-  /**
-   * Cleans up the state store after each test.
-   */
-  @AfterEach
-  public void tearDown() {
+  public void waitSetup() {
+    daprClient.waitForSidecar(1000).block();
     var meta = Collections.singletonMap("sql", "delete from state");
-
     daprClient.invokeBinding(BINDING_NAME, "exec", null, meta).block();
   }
+
 
   @Test
   public void testInsertAndQueryDaprKeyValueTemplate() {
