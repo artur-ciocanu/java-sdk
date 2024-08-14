@@ -13,17 +13,12 @@ limitations under the License.
 
 package io.dapr.it.spring.data;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dapr.client.DaprClient;
-import io.dapr.client.DaprClientBuilder;
-import io.dapr.spring.data.DaprKeyValueAdapterResolver;
 import io.dapr.spring.data.DaprKeyValueTemplate;
-import io.dapr.spring.data.KeyValueAdapterResolver;
 import io.dapr.testcontainers.Component;
 import io.dapr.testcontainers.DaprContainer;
 import io.dapr.testcontainers.DaprLogLevel;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -116,7 +111,7 @@ public class MySQLDaprKeyValueTemplateIT {
 
   @BeforeEach
   public void waitSetup() {
-    daprClient.waitForSidecar(10000).block();
+    daprClient.waitForSidecar(1000).block();
   }
 
   /**

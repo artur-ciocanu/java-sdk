@@ -13,23 +13,17 @@ limitations under the License.
 
 package io.dapr.it.spring.data;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dapr.client.DaprClient;
-import io.dapr.client.DaprClientBuilder;
-import io.dapr.spring.data.DaprKeyValueAdapterResolver;
 import io.dapr.spring.data.DaprKeyValueTemplate;
-import io.dapr.spring.data.KeyValueAdapterResolver;
-import io.dapr.testcontainers.TestcontainersDaprClientCustomizer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,6 +41,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SuppressWarnings("AbbreviationAsWordInName")
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = TestDaprSpringDataConfiguration.class)
+@Testcontainers
 public class PostgreSQLDaprKeyValueTemplateIT extends AbstractPostgreSQLBaseIT {
 
   @Autowired
@@ -58,16 +53,10 @@ public class PostgreSQLDaprKeyValueTemplateIT extends AbstractPostgreSQLBaseIT {
   @BeforeEach
   public void waitSetup() {
     daprClient.waitForSidecar(1000).block();
-  }
-
-  /**
-   * Cleans up the state store after each test.
-   */
-  @AfterEach
-  public void tearDown() {
     var meta = Collections.singletonMap("sql", "delete from state");
     daprClient.invokeBinding(BINDING_NAME, "exec", null, meta).block();
   }
+  
 
   @Test
   public void testInsertAndQueryDaprKeyValueTemplate() {

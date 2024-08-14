@@ -33,7 +33,6 @@ import static io.dapr.it.spring.data.DaprSpringDataConstants.PUBSUB_NAME;
 import static io.dapr.it.spring.data.DaprSpringDataConstants.STATE_STORE_NAME;
 
 @SuppressWarnings("AbbreviationAsWordInName")
-@Testcontainers
 public abstract class AbstractPostgreSQLBaseIT {
   private static final String CONNECTION_STRING =
       "host=postgres user=postgres password=password port=5432 connect_timeout=10 database=dapr_db";
