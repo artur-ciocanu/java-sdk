@@ -54,17 +54,15 @@ Run `dapr init` to initialize Dapr in Self-Hosted Mode if it's not already initi
 
 Before getting into the application code, follow these steps in order to set up a local instance of Kafka. This is needed for the local instances.
 
-1. Run the container locally:
+1. Run the Kafka locally:
 
 <!-- STEP
 name: Setup kafka container
-expected_stderr_lines:
-  - 'Creating network "http_default" with the default driver'
-sleep: 5
+sleep: 20
 -->
 
 ```bash
-docker-compose -f ./src/main/java/io/dapr/examples/bindings/http/docker-compose-single-kafka.yml up -d
+docker compose -f ./src/main/java/io/dapr/examples/bindings/http/docker-compose-single-kafka.yml up -d
 ```
 
 <!-- END_STEP -->
@@ -125,7 +123,7 @@ sleep: 10
 -->
 
 ```bash
-dapr run --components-path ./components/bindings --app-id inputbinding --app-port 3000 -- java -jar target/dapr-java-sdk-examples-exec.jar io.dapr.examples.bindings.http.InputBindingExample -p 3000
+dapr run --resources-path ./components/bindings --app-id inputbinding --app-port 3000 -- java -jar target/dapr-java-sdk-examples-exec.jar io.dapr.examples.bindings.http.InputBindingExample -p 3000
 ```
 
 <!-- END_STEP -->
@@ -195,7 +193,7 @@ sleep: 30
 -->
 
 ```bash
-dapr run --components-path ./components/bindings --app-id outputbinding -- java -jar target/dapr-java-sdk-examples-exec.jar io.dapr.examples.bindings.http.OutputBindingExample
+dapr run --resources-path ./components/bindings --app-id outputbinding -- java -jar target/dapr-java-sdk-examples-exec.jar io.dapr.examples.bindings.http.OutputBindingExample
 ```
 
 <!-- END_STEP -->
@@ -248,7 +246,7 @@ name: Cleanup Kafka containers
 -->
 
 ```bash
-docker-compose -f ./src/main/java/io/dapr/examples/bindings/http/docker-compose-single-kafka.yml down
+docker compose -f ./src/main/java/io/dapr/examples/bindings/http/docker-compose-single-kafka.yml down
 ```
 
 <!-- END_STEP -->

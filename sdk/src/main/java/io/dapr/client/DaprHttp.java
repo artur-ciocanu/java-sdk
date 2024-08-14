@@ -152,15 +152,21 @@ public class DaprHttp implements AutoCloseable {
   private final OkHttpClient httpClient;
 
   /**
+   * Dapr API Token required to interact with DAPR APIs.
+   */
+  private final String daprApiToken;
+
+  /**
    * Creates a new instance of {@link DaprHttp}.
    *
    * @param hostname   Hostname for calling Dapr. (e.g. "127.0.0.1")
    * @param port       Port for calling Dapr. (e.g. 3500)
    * @param httpClient RestClient used for all API calls in this new instance.
    */
-  DaprHttp(String hostname, int port, OkHttpClient httpClient) {
+  DaprHttp(String hostname, int port, String daprApiToken, OkHttpClient httpClient) {
     this.uri = URI.create(DEFAULT_HTTP_SCHEME + "://" + hostname + ":" + port);
     this.httpClient = httpClient;
+    this.daprApiToken = daprApiToken;
   }
 
   /**
@@ -169,9 +175,10 @@ public class DaprHttp implements AutoCloseable {
    * @param uri        Endpoint for calling Dapr. (e.g. "https://my-dapr-api.company.com")
    * @param httpClient RestClient used for all API calls in this new instance.
    */
-  DaprHttp(String uri, OkHttpClient httpClient) {
+  DaprHttp(String uri, String daprApiToken, OkHttpClient httpClient) {
     this.uri = URI.create(uri);
     this.httpClient = httpClient;
+    this.daprApiToken = daprApiToken;
   }
 
   /**
@@ -314,7 +321,6 @@ public class DaprHttp implements AutoCloseable {
       requestBuilder.method(method, body);
     }
 
-    String daprApiToken = Properties.API_TOKEN.get();
     if (daprApiToken != null) {
       requestBuilder.addHeader(Headers.DAPR_API_TOKEN, daprApiToken);
     }
@@ -349,7 +355,8 @@ public class DaprHttp implements AutoCloseable {
     try {
       return DAPR_ERROR_DETAILS_OBJECT_MAPPER.readValue(json, DaprError.class);
     } catch (IOException e) {
-      throw new DaprException("UNKNOWN", new String(json, StandardCharsets.UTF_8), json);
+      // Could not parse DaprError. Return null.
+      return null;
     }
   }
 
@@ -384,17 +391,13 @@ public class DaprHttp implements AutoCloseable {
         try {
           byte[] payload = getBodyBytesOrEmptyArray(response);
           DaprError error = parseDaprError(payload);
-          if ((error != null) && (error.getErrorCode() != null)) {
-            if (error.getMessage() != null) {
-              future.completeExceptionally(new DaprException(error, payload));
-            } else {
-              future.completeExceptionally(
-                  new DaprException(error.getErrorCode(), "HTTP status code: " + response.code(), payload));
-            }
+          if (error != null) {
+            future.completeExceptionally(new DaprException(error, payload, response.code()));
             return;
           }
 
-          future.completeExceptionally(new DaprException("UNKNOWN", "HTTP status code: " + response.code(), payload));
+          future.completeExceptionally(
+              new DaprException("UNKNOWN", "", payload, response.code()));
           return;
         } catch (DaprException e) {
           future.completeExceptionally(e);

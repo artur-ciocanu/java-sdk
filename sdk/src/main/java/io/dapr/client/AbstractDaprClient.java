@@ -59,7 +59,7 @@ import java.util.stream.Collectors;
  * Abstract class with convenient methods common between client implementations.
  *
  * @see io.dapr.client.DaprClient
- * @see io.dapr.client.DaprClientGrpc
+ * @see DaprClientImpl
  * @see io.dapr.client.DaprClientHttp
  */
 abstract class AbstractDaprClient implements DaprClient, DaprPreviewClient {
@@ -493,7 +493,11 @@ abstract class AbstractDaprClient implements DaprClient, DaprPreviewClient {
    */
   @Override
   public Mono<Void> saveState(String storeName, String key, String etag, Object value, StateOptions options) {
-    State<?> state = new State<>(key, value, etag, options);
+    Map<String, String> meta = null;
+    if (value != null) {
+      meta = Collections.singletonMap("contentType", stateSerializer.getContentType());
+    }
+    State<?> state = new State<>(key, value, etag, meta, options);
     return this.saveBulkState(storeName, Collections.singletonList(state));
   }
 
