@@ -56,7 +56,7 @@ public class PostgreSQLDaprKeyValueTemplateIT extends AbstractPostgreSQLBaseIT {
     var meta = Collections.singletonMap("sql", "delete from state");
     daprClient.invokeBinding(BINDING_NAME, "exec", null, meta).block();
   }
-  
+
 
   @Test
   public void testInsertAndQueryDaprKeyValueTemplate() {
